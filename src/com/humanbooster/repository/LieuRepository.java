@@ -1,5 +1,7 @@
 package src.com.humanbooster.repository;
 
+import src.com.humanbooster.model.BorneRecharge;
+import src.com.humanbooster.model.EtatBorne;
 import src.com.humanbooster.model.LieuRecharge;
 
 import java.io.*;
@@ -49,14 +51,22 @@ public class LieuRepository {
                 json.append(line.trim());
             }
 
-            String content = json.toString().replace("[", "").replace("]", "");
+            String content = json.toString();
             if (content.isEmpty()) return list;
 
-            String[] items = content.split("},\\{");
-            for (String raw : items) {
-                String item = raw;
+            // Nettoyage des crochets extérieurs
+            if (content.startsWith("[")) content = content.substring(1);
+            if (content.endsWith("]")) content = content.substring(0, content.length() - 1);
+
+            // Découpe intelligente sur les objets "lieu"
+            String[] items = content.split("\\},\\s*\\{\\s*\"id\":");
+            for (int i = 0; i < items.length; i++) {
+                String item = items[i];
+
+                // Réinjecte la clé "id" supprimée par le split
+                if (i != 0) item = "{\"id\":" + item;
                 if (!item.startsWith("{")) item = "{" + item;
-                if (!item.endsWith("}")) item = item + "}";
+                if (!item.endsWith("}")) item += "}";
 
                 LieuRecharge lieu = parseLieu(item);
                 if (lieu != null) list.add(lieu);
@@ -80,7 +90,19 @@ public class LieuRepository {
                 writer.write("    \"id\": \"" + l.getId() + "\",\n");
                 writer.write("    \"nom\": \"" + l.getNom() + "\",\n");
                 writer.write("    \"adresse\": \"" + l.getAdresse() + "\",\n");
-                writer.write("    \"bornes\": []\n"); // simplification : bornes non sérialisées ici
+                writer.write("    \"bornes\": [\n");
+
+                List<BorneRecharge> bornes = l.getBornes();
+                for (int j = 0; j < bornes.size(); j++) {
+                    BorneRecharge b = bornes.get(j);
+                    writer.write("      {\n");
+                    writer.write("        \"id\": \"" + b.getId() + "\",\n");
+                    writer.write("        \"etat\": \"" + b.getEtat().name() + "\",\n");
+                    writer.write("        \"tarifHoraire\": " + b.getTarifHoraire() + "\n");
+                    writer.write("      }" + (j < bornes.size() - 1 ? "," : "") + "\n");
+                }
+
+                writer.write("    ]\n");
                 writer.write("  }" + (i < list.size() - 1 ? "," : "") + "\n");
             }
             writer.write("]");
@@ -91,28 +113,91 @@ public class LieuRepository {
 
     private LieuRecharge parseLieu(String json) {
         try {
-            json = json.replace("{", "").replace("}", "").trim();
-            String[] fields = json.split(",\"");
-            String id = "", nom = "", adresse = "";
+            json = json.trim();
+            if (!json.startsWith("{") || !json.endsWith("}")) return null;
 
-            for (String field : fields) {
-                String[] kv = field.replace("\"", "").split(":");
-                if (kv.length < 2) continue;
-                String key = kv[0].trim();
-                String value = kv[1].trim();
+            // Séparation brute entre partie méta et les bornes
+            int indexBornes = json.indexOf("\"bornes\"");
+            if (indexBornes == -1) return null;
 
-                switch (key) {
-                    case "id" -> id = value;
-                    case "nom" -> nom = value;
-                    case "adresse" -> adresse = value;
+            String metaPart = json.substring(0, indexBornes);
+            String bornesPart = json.substring(indexBornes);
+
+            String id = extractJsonValue(metaPart, "id");
+            String nom = extractJsonValue(metaPart, "nom");
+            String adresse = extractJsonValue(metaPart, "adresse");
+
+            LieuRecharge lieu = new LieuRecharge(id, nom, adresse);
+
+            // Désérialisation des bornes
+            if (bornesPart.contains("[") && bornesPart.contains("]")) {
+                String rawList = bornesPart.substring(bornesPart.indexOf("[") + 1, bornesPart.lastIndexOf("]"));
+                String[] items = rawList.split("},\\{");
+
+                for (String raw : items) {
+                    String item = raw;
+                    if (!item.startsWith("{")) item = "{" + item;
+                    if (!item.endsWith("}")) item = item + "}";
+                    BorneRecharge b = parseBorne(item);
+                    if (b != null) lieu.ajouterBorne(b);
                 }
             }
 
-            return new LieuRecharge(id, nom, adresse);
+            return lieu;
 
         } catch (Exception e) {
-            System.err.println("Erreur lors de la désérialisation du lieu : " + e.getMessage());
+            System.err.println("Erreur parsing lieu : " + e.getMessage());
             return null;
         }
+    }
+
+    private BorneRecharge parseBorne(String json) {
+        try {
+            if (json.equals("{}")) return null; // 👈 Ignore les objets vides
+
+            json = json.replace("{", "").replace("}", "").trim();
+            String[] fields = json.split(",");
+
+            String id = "";
+            String etatStr = "";
+            double tarif = 0;
+
+            for (String field : fields) {
+                String[] kv = field.split(":");
+                if (kv.length < 2) continue;
+
+                String key = kv[0].replace("\"", "").trim();
+                String value = kv[1].replace("\"", "").trim();
+
+                switch (key) {
+                    case "id" -> id = value;
+                    case "etat" -> etatStr = value;
+                    case "tarifHoraire" -> tarif = Double.parseDouble(value);
+                }
+            }
+
+            return new BorneRecharge(id, EtatBorne.valueOf(etatStr), tarif);
+
+        } catch (Exception e) {
+            System.err.println("Erreur lors du parsing de borne : " + e.getMessage());
+            return null;
+        }
+    }
+
+    private String extractJsonValue(String json, String key) {
+        try {
+            String[] parts = json.split(",");
+            for (String part : parts) {
+                if (part.contains("\"" + key + "\"")) {
+                    String[] kv = part.split(":");
+                    if (kv.length == 2) {
+                        return kv[1].replace("\"", "").trim();
+                    }
+                }
+            }
+        } catch (Exception e) {
+            System.err.println("Erreur lors de l'extraction de la valeur JSON : " + e.getMessage());
+        }
+        return "";
     }
 }
