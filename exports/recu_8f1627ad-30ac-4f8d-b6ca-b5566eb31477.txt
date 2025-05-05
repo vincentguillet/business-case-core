@@ -1,0 +1,8 @@
+=== Reçu de réservation ===
+ID Réservation : 8f1627ad-30ac-4f8d-b6ca-b5566eb31477
+ID Borne       : 300ef795-da1e-4205-9f2d-c76f412c94db
+Date début     : 2025-05-21 14:00
+Date fin       : 2025-05-21 17:30
+Durée (h)      : 3
+Tarif horaire  : 5.0 €/h
+Total estimé   : 15.0 €

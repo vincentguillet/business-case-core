@@ -1,0 +1,14 @@
+[
+  {
+    "id": "41823f32-9364-442e-b6f2-79cbab935c45",
+    "nom": "Human Booster",
+    "adresse": "222 Avenue Gustave Flaubert, 63000 Clermont-Ferrand",
+    "bornes": [
+      {
+        "id": "300ef795-da1e-4205-9f2d-c76f412c94db",
+        "etat": "DISPONIBLE",
+        "tarifHoraire": 5.0
+      }
+    ]
+  }
+]
