@@ -8,25 +8,48 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Classe LieuRepository
+ * Permet de lire, écrire, trouver et supprimer des lieux dans un fichier JSON.
+ */
 public class LieuRepository {
 
     private static final String FILE_PATH = "data/lieux.json";
     private final List<LieuRecharge> lieux;
 
+    /**
+     * Constructeur de la classe LieuRepository.
+     * Initialise la liste des lieux en lisant le fichier JSON.
+     */
     public LieuRepository() {
         this.lieux = readLieux();
     }
 
+    /**
+     * Récupère la liste de tous les lieux.
+     *
+     * @return Liste de tous les lieux.
+     */
     public List<LieuRecharge> findAll() {
         return lieux;
     }
 
+    /**
+     * Enregistre un lieu dans le fichier JSON.
+     *
+     * @param lieu Le lieu à enregistrer.
+     */
     public void save(LieuRecharge lieu) {
         lieux.removeIf(l -> l.getId().equals(lieu.getId()));
         lieux.add(lieu);
         writeLieux(lieux);
     }
 
+    /**
+     * Récupère un lieu via son ID.
+     *
+     * @param id L'ID du lieu à récupérer.
+     */
     public LieuRecharge findById(String id) {
         return lieux.stream()
                 .filter(l -> l.getId().equals(id))
@@ -34,11 +57,20 @@ public class LieuRepository {
                 .orElse(null);
     }
 
+    /**
+     * Supprime un lieu via son ID.
+     *
+     * @param id L'ID du lieu à supprimer.
+     */
     public void deleteById(String id) {
         lieux.removeIf(l -> l.getId().equals(id));
         writeLieux(lieux);
     }
 
+    /**
+     * Lit le fichier JSON et désérialise les lieux.
+     *
+     */
     private List<LieuRecharge> readLieux() {
         List<LieuRecharge> list = new ArrayList<>();
         File file = new File(FILE_PATH);
@@ -81,6 +113,11 @@ public class LieuRepository {
         return list;
     }
 
+    /**
+     * Écrit la liste des lieux dans le fichier JSON.
+     *
+     * @param list La liste des lieux à écrire.
+     */
     private void writeLieux(List<LieuRecharge> list) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_PATH))) {
             writer.write("[\n");
@@ -111,6 +148,12 @@ public class LieuRepository {
         }
     }
 
+    /**
+     * Parse un JSON brut pour créer un objet LieuRecharge.
+     *
+     * @param json Le JSON à parser.
+     * @return Un objet LieuRecharge ou null en cas d'erreur.
+     */
     private LieuRecharge parseLieu(String json) {
         try {
             json = json.trim();
@@ -151,6 +194,12 @@ public class LieuRepository {
         }
     }
 
+    /**
+     * Parse un JSON brut pour créer un objet BorneRecharge.
+     *
+     * @param json Le JSON à parser.
+     * @return Un objet BorneRecharge ou null en cas d'erreur.
+     */
     private BorneRecharge parseBorne(String json) {
         try {
             if (json.equals("{}")) return null; // 👈 Ignore les objets vides
@@ -184,6 +233,13 @@ public class LieuRepository {
         }
     }
 
+    /**
+     * Extrait la valeur d'une clé dans un JSON brut.
+     *
+     * @param json Le JSON brut.
+     * @param key  La clé à rechercher.
+     * @return La valeur associée à la clé ou une chaîne vide si non trouvée.
+     */
     private String extractJsonValue(String json, String key) {
         try {
             String[] parts = json.split(",");

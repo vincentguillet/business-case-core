@@ -99,10 +99,20 @@ public class LieuRecharge {
         this.bornes = bornes;
     }
 
+    /**
+     * Ajoute une borne de recharge à ce lieu
+     *
+     * @param borne La borne de recharge à ajouter
+     */
     public void ajouterBorne(BorneRecharge borne) {
         this.bornes.add(borne);
     }
 
+    /**
+     * Suppression d'une borne de recharge par son identifiant
+     *
+     * @param borneId L'identifiant de la borne de recharge à supprimer
+     */
     public void supprimerBorne(String borneId) {
         this.bornes.removeIf(b -> b.getId().equals(borneId));
     }

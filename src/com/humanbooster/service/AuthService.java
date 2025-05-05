@@ -2,6 +2,11 @@ package src.com.humanbooster.service;
 
 import src.com.humanbooster.model.Utilisateur;
 
+/**
+ * Interface pour le service d'authentification.
+ * Fournit des méthodes pour inscrire, connecter, déconnecter un utilisateur,
+ * valider un compte et vérifier l'état de connexion.
+ */
 public interface AuthService {
 
     Utilisateur inscrire(String email, String motDePasse);

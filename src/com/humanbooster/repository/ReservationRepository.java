@@ -9,26 +9,47 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Classe ReservationRepository
+ * Permet de gérer les réservations en les lisant et en les écrivant dans un fichier JSON.
+ */
 public class ReservationRepository {
 
     private static final String FILE_PATH = "data/reservations.json";
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
     private final List<Reservation> reservations;
 
+    /**
+     * Constructeur de la classe ReservationRepository.
+     * Initialise la liste des réservations en lisant le fichier JSON.
+     */
     public ReservationRepository() {
         this.reservations = readReservations();
     }
 
+    /**
+     * Récupère la liste des réservations
+     *
+     * @return la liste des réservations
+     */
     public List<Reservation> findAll() {
         return reservations;
     }
 
+    /**
+     * Enregistre une réservation dans le fichier JSON.
+     * @param reservation
+     */
     public void save(Reservation reservation) {
         reservations.removeIf(r -> r.getId().equals(reservation.getId()));
         reservations.add(reservation);
         writeReservations(reservations);
     }
 
+    /**
+     * Récupère une réservation via son identifiant.
+     * @param reservation La réservation récupérée via son identifiant
+     */
     public Reservation findById(String id) {
         return reservations.stream()
                 .filter(r -> r.getId().equals(id))
@@ -36,6 +57,11 @@ public class ReservationRepository {
                 .orElse(null);
     }
 
+    /**
+     * Récupère la liste des réservations concernant une borne
+     * @param idBorne L'identifiant de la borne
+     * @return La liste des réservations concernées
+     */
     public List<Reservation> findByBorneId(String idBorne) {
         List<Reservation> result = new ArrayList<>();
         for (Reservation r : reservations) {
@@ -46,6 +72,10 @@ public class ReservationRepository {
         return result;
     }
 
+    /**
+     * Récupère la liste des réservations dans le fichier JSON
+     * @return La liste des réservations
+     */
     private List<Reservation> readReservations() {
         List<Reservation> list = new ArrayList<>();
         File file = new File(FILE_PATH);
@@ -78,6 +108,10 @@ public class ReservationRepository {
         return list;
     }
 
+    /**
+     * Écrit la liste des réservations dans le fichier JSON
+     * @param list La liste des réservations
+     */
     private void writeReservations(List<Reservation> list) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_PATH))) {
             writer.write("[\n");
@@ -98,6 +132,11 @@ public class ReservationRepository {
         }
     }
 
+    /**
+     * Désérialise une chaîne JSON en un objet Reservation
+     * @param json La chaîne JSON à désérialiser
+     * @return L'objet Reservation correspondant
+     */
     private Reservation parseReservation(String json) {
         try {
             json = json.replace("{", "").replace("}", "").trim();

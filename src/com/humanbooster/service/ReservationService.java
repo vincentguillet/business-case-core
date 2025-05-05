@@ -5,6 +5,9 @@ import src.com.humanbooster.model.Reservation;
 import java.time.LocalDateTime;
 import java.util.List;
 
+/**
+ * Interface pour le service de gestion des réservations.
+ */
 public interface ReservationService {
 
     List<Reservation> chercherBornesDisponibles(LocalDateTime debut, LocalDateTime fin);
