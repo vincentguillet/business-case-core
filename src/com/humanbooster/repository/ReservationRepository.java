@@ -2,10 +2,10 @@ package src.com.humanbooster.repository;
 
 import src.com.humanbooster.model.Reservation;
 import src.com.humanbooster.model.StatutReservation;
+import src.com.humanbooster.util.TimeUtil;
 
 import java.io.*;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,7 +16,6 @@ import java.util.List;
 public class ReservationRepository {
 
     private static final String FILE_PATH = "data/reservations.json";
-    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
     private final List<Reservation> reservations;
 
     /**
@@ -38,7 +37,7 @@ public class ReservationRepository {
 
     /**
      * Enregistre une réservation dans le fichier JSON.
-     * @param reservation
+     * @param reservation La réservation à enregistrer
      */
     public void save(Reservation reservation) {
         reservations.removeIf(r -> r.getId().equals(reservation.getId()));
@@ -48,7 +47,7 @@ public class ReservationRepository {
 
     /**
      * Récupère une réservation via son identifiant.
-     * @param reservation La réservation récupérée via son identifiant
+     * @param id L'identifiant de la réservation
      */
     public Reservation findById(String id) {
         return reservations.stream()
@@ -121,8 +120,8 @@ public class ReservationRepository {
                 writer.write("    \"id\": \"" + r.getId() + "\",\n");
                 writer.write("    \"idUtilisateur\": \"" + r.getIdUtilisateur() + "\",\n");
                 writer.write("    \"idBorne\": \"" + r.getIdBorne() + "\",\n");
-                writer.write("    \"dateDebut\": \"" + r.getDateDebut().format(FORMATTER) + "\",\n");
-                writer.write("    \"dateFin\": \"" + r.getDateFin().format(FORMATTER) + "\",\n");
+                writer.write("    \"dateDebut\": \"" + r.getDateDebut().format(TimeUtil.FORMATTER) + "\",\n");
+                writer.write("    \"dateFin\": \"" + r.getDateFin().format(TimeUtil.FORMATTER) + "\",\n");
                 writer.write("    \"statut\": \"" + r.getStatut().name() + "\"\n");
                 writer.write("  }" + (i < list.size() - 1 ? "," : "") + "\n");
             }
@@ -163,8 +162,8 @@ public class ReservationRepository {
                     id,
                     idUser,
                     idBorne,
-                    LocalDateTime.parse(debut, FORMATTER),
-                    LocalDateTime.parse(fin, FORMATTER),
+                    LocalDateTime.parse(debut, TimeUtil.FORMATTER),
+                    LocalDateTime.parse(fin, TimeUtil.FORMATTER),
                     StatutReservation.valueOf(statutStr)
             );
 
