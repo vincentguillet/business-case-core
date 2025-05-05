@@ -4,6 +4,8 @@ import src.com.humanbooster.controller.AuthController;
 import src.com.humanbooster.controller.BorneController;
 import src.com.humanbooster.controller.LieuController;
 import src.com.humanbooster.controller.ReservationController;
+import src.com.humanbooster.model.BorneRecharge;
+import src.com.humanbooster.model.LieuRecharge;
 import src.com.humanbooster.repository.LieuRepository;
 import src.com.humanbooster.repository.ReservationRepository;
 import src.com.humanbooster.repository.UserRepository;
@@ -25,14 +27,14 @@ public class Main {
         // Services
         AuthService authService = new AuthServiceImpl(userRepo);
         LieuService lieuService = new LieuServiceImpl(lieuRepo);
-        BorneService borneService = new BorneServiceImpl(lieuRepo);
+        BorneService borneService = new BorneServiceImpl(lieuRepo, reservationRepo);
         DocumentService documentService = new DocumentServiceImpl(lieuRepo);
         ReservationService reservationService = new ReservationServiceImpl(reservationRepo, lieuRepo, documentService);
 
         // Controllers
         AuthController authController = new AuthController(authService, scanner);
         LieuController lieuController = new LieuController(lieuService, scanner);
-        BorneController borneController = new BorneController(borneService, scanner);
+        BorneController borneController = new BorneController(borneService, lieuController, scanner);
         ReservationController reservationController = new ReservationController(reservationService, scanner);
 
         // Menu principal
