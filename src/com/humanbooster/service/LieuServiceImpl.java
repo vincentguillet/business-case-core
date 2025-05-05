@@ -33,6 +33,20 @@ public class LieuServiceImpl implements LieuService {
     }
 
     @Override
+    public boolean supprimerLieu(String id) {
+        LieuRecharge lieu = lieuRepository.findById(id);
+        if (lieu == null) return false;
+
+        if (!lieu.getBornes().isEmpty()) {
+            System.out.println("Ce lieu contient des bornes. Veuillez d'abord les supprimer.");
+            return false;
+        }
+
+        lieuRepository.deleteById(id);
+        return true;
+    }
+
+    @Override
     public List<LieuRecharge> listerLieux() {
         return lieuRepository.findAll();
     }
