@@ -5,12 +5,14 @@ import src.com.humanbooster.model.StatutReservation;
 
 import java.io.*;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ReservationRepository {
 
     private static final String FILE_PATH = "data/reservations.json";
+    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
     private final List<Reservation> reservations;
 
     public ReservationRepository() {
@@ -85,8 +87,8 @@ public class ReservationRepository {
                 writer.write("    \"id\": \"" + r.getId() + "\",\n");
                 writer.write("    \"idUtilisateur\": \"" + r.getIdUtilisateur() + "\",\n");
                 writer.write("    \"idBorne\": \"" + r.getIdBorne() + "\",\n");
-                writer.write("    \"dateDebut\": \"" + r.getDateDebut() + "\",\n");
-                writer.write("    \"dateFin\": \"" + r.getDateFin() + "\",\n");
+                writer.write("    \"dateDebut\": \"" + r.getDateDebut().format(FORMATTER) + "\",\n");
+                writer.write("    \"dateFin\": \"" + r.getDateFin().format(FORMATTER) + "\",\n");
                 writer.write("    \"statut\": \"" + r.getStatut().name() + "\"\n");
                 writer.write("  }" + (i < list.size() - 1 ? "," : "") + "\n");
             }
@@ -103,7 +105,7 @@ public class ReservationRepository {
             String id = "", idUser = "", idBorne = "", debut = "", fin = "", statutStr = "";
 
             for (String field : fields) {
-                String[] kv = field.replace("\"", "").split(":");
+                String[] kv = field.replace("\"", "").split(":", 2);
                 if (kv.length < 2) continue;
                 String key = kv[0].trim();
                 String value = kv[1].trim();
@@ -122,8 +124,8 @@ public class ReservationRepository {
                     id,
                     idUser,
                     idBorne,
-                    LocalDateTime.parse(debut),
-                    LocalDateTime.parse(fin),
+                    LocalDateTime.parse(debut, FORMATTER),
+                    LocalDateTime.parse(fin, FORMATTER),
                     StatutReservation.valueOf(statutStr)
             );
 
