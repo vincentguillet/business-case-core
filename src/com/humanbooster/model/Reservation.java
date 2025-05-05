@@ -1,5 +1,7 @@
 package src.com.humanbooster.model;
 
+import src.com.humanbooster.util.TimeUtil;
+
 import java.time.LocalDateTime;
 
 /**
@@ -140,5 +142,19 @@ public class Reservation {
      */
     public void setStatut(StatutReservation statut) {
         this.statut = statut;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("Réservation ID : ").append(id).append("\n");
+        sb.append("Utilisateur ID : ").append(idUtilisateur).append("\n");
+        sb.append("Borne ID : ").append(idBorne).append("\n");
+        sb.append("Date de début : ").append(dateDebut.format(TimeUtil.FORMATTER)).append("\n");
+        sb.append("Date de fin : ").append(dateFin.format(TimeUtil.FORMATTER)).append("\n");
+        sb.append("Statut : ").append(statut).append("\n");
+
+        return sb.toString();
     }
 }
