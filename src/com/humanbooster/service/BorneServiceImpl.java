@@ -7,16 +7,32 @@ import src.com.humanbooster.repository.ReservationRepository;
 
 import java.util.List;
 
+/**
+ * Implémentation du service de gestion des bornes de recharge.
+ */
 public class BorneServiceImpl implements BorneService {
 
     private final LieuRepository lieuRepository;
     private final ReservationRepository reservationRepository;
 
+    /**
+     * Constructeur de la classe BorneServiceImpl.
+     *
+     * @param lieuRepository        Le repository pour les lieux de recharge.
+     * @param reservationRepository  Le repository pour les réservations.
+     */
     public BorneServiceImpl(LieuRepository lieuRepository, ReservationRepository reservationRepository) {
         this.lieuRepository = lieuRepository;
         this.reservationRepository = reservationRepository;
     }
 
+    /**
+     * Ajoute une borne de recharge à un lieu donné.
+     *
+     * @param idLieu  L'identifiant du lieu de recharge.
+     * @param borne    La borne de recharge à ajouter.
+     * @return true si la borne a été ajoutée avec succès, false sinon.
+     */
     @Override
     public boolean ajouterBorne(String idLieu, BorneRecharge borne) {
         LieuRecharge lieu = lieuRepository.findById(idLieu);
@@ -31,6 +47,13 @@ public class BorneServiceImpl implements BorneService {
         return true;
     }
 
+    /**
+     * Modifie une borne de recharge existante dans un lieu donné.
+     *
+     * @param idLieu          L'identifiant du lieu de recharge.
+     * @param borneModifiee   La borne de recharge modifiée.
+     * @return true si la borne a été modifiée avec succès, false sinon.
+     */
     @Override
     public boolean modifierBorne(String idLieu, BorneRecharge borneModifiee) {
         LieuRecharge lieu = lieuRepository.findById(idLieu);
@@ -47,6 +70,13 @@ public class BorneServiceImpl implements BorneService {
         return false;
     }
 
+    /**
+     * Supprime une borne de recharge d'un lieu donné.
+     *
+     * @param idLieu  L'identifiant du lieu de recharge.
+     * @param idBorne L'identifiant de la borne de recharge à supprimer.
+     * @return true si la borne a été supprimée avec succès, false sinon.
+     */
     @Override
     public boolean supprimerBorne(String idLieu, String idBorne) {
         LieuRecharge lieu = lieuRepository.findById(idLieu);
@@ -69,12 +99,25 @@ public class BorneServiceImpl implements BorneService {
         return false;
     }
 
+    /**
+     * Liste toutes les bornes de recharge d'un lieu donné.
+     *
+     * @param idLieu L'identifiant du lieu de recharge.
+     * @return La liste des bornes de recharge du lieu.
+     */
     @Override
     public List<BorneRecharge> listerBornesParLieu(String idLieu) {
         LieuRecharge lieu = lieuRepository.findById(idLieu);
         return (lieu != null) ? lieu.getBornes() : List.of();
     }
 
+    /**
+     * Trouve une borne de recharge par son identifiant dans un lieu donné.
+     *
+     * @param idLieu  L'identifiant du lieu de recharge.
+     * @param idBorne L'identifiant de la borne de recharge.
+     * @return La borne de recharge trouvée, ou null si elle n'existe pas.
+     */
     @Override
     public BorneRecharge trouverBorneParId(String idLieu, String idBorne) {
         LieuRecharge lieu = lieuRepository.findById(idLieu);

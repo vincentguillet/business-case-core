@@ -5,15 +5,30 @@ import src.com.humanbooster.repository.UserRepository;
 
 import java.util.UUID;
 
+/**
+ * Implémentation du service d'authentification.
+ */
 public class AuthServiceImpl implements AuthService {
 
     private final UserRepository userRepository;
     private Utilisateur utilisateurEnSession;
 
+    /**
+     * Constructeur de la classe AuthServiceImpl.
+     *
+     * @param userRepository Le dépôt d'utilisateurs.
+     */
     public AuthServiceImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
+    /**
+     * Inscrit un nouvel utilisateur.
+     *
+     * @param email       L'email de l'utilisateur.
+     * @param motDePasse  Le mot de passe de l'utilisateur.
+     * @return L'utilisateur inscrit ou null si l'email existe déjà.
+     */
     @Override
     public Utilisateur inscrire(String email, String motDePasse) {
         if (userRepository.existsByEmail(email)) {
@@ -28,6 +43,11 @@ public class AuthServiceImpl implements AuthService {
         return u;
     }
 
+    /**
+     * Valide le compte d'un utilisateur
+     * @param email L'email du compte utilisateur à valider
+     * @param code Le code de validation reçu par l'utilisateur dans la console
+     */
     @Override
     public boolean validerCompte(String email, String code) {
         Utilisateur u = userRepository.findByEmail(email);
@@ -39,6 +59,12 @@ public class AuthServiceImpl implements AuthService {
         return false;
     }
 
+    /**
+     * Permet à un utilisateur de se connecter
+     * @param email L'email de l'utilisateur
+     * @param motDePasse Le mot de passe de l'utilisateur
+     * @return L'utilisateur connecté
+     */
     @Override
     public Utilisateur connecter(String email, String motDePasse) {
         Utilisateur u = userRepository.findByEmail(email);
@@ -49,21 +75,37 @@ public class AuthServiceImpl implements AuthService {
         return null;
     }
 
+    /**
+     * Permet à un utilisateur de se déconnecter
+     */
     @Override
     public void deconnecter() {
         utilisateurEnSession = null;
     }
 
+    /**
+     * Récupère l'utilisateur connecté
+     * @return L'utilisateur connecté
+     */
     @Override
     public Utilisateur getUtilisateurConnecte() {
         return utilisateurEnSession;
     }
 
+    /**
+     * Vérifie si un utilisateur est connecté
+     * @return true si l'utilisateur est connecté, false sinon
+     */
     @Override
     public boolean estConnecte() {
         return utilisateurEnSession != null;
     }
 
+    /**
+     * Vérifie si un compte est valide
+     * @param email L'email de l'utilisateur
+     * @return true si le compte est valide, false sinon
+     */
     @Override
     public boolean estCompteValide(String email) {
         Utilisateur u = userRepository.findByEmail(email);

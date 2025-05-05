@@ -12,6 +12,9 @@ import java.io.IOException;
 import java.time.Duration;
 import java.time.format.DateTimeFormatter;
 
+/**
+ * Classe de service pour la gestion des documents liés aux réservations.
+ */
 public class DocumentServiceImpl implements DocumentService {
 
     private static final String EXPORT_DIR = "exports";
@@ -19,10 +22,20 @@ public class DocumentServiceImpl implements DocumentService {
 
     private final LieuRepository lieuRepository;
 
+    /**
+     * Constructeur de la classe DocumentServiceImpl.
+     *
+     * @param lieuRepository Le repository des lieux de recharge.
+     */
     public DocumentServiceImpl(LieuRepository lieuRepository) {
         this.lieuRepository = lieuRepository;
     }
 
+    /**
+     * Génère un reçu de réservation au format texte.
+     *
+     * @param r La réservation pour laquelle générer le reçu.
+     */
     @Override
     public void genererRecuReservation(Reservation r) {
         BorneRecharge borne = trouverBorneParId(r.getIdBorne());
@@ -53,6 +66,12 @@ public class DocumentServiceImpl implements DocumentService {
         }
     }
 
+    /**
+     * Trouve une borne de recharge par son ID.
+     *
+     * @param idBorne L'ID de la borne à trouver.
+     * @return La borne de recharge correspondante, ou null si introuvable.
+     */
     private BorneRecharge trouverBorneParId(String idBorne) {
         for (LieuRecharge lieu : lieuRepository.findAll()) {
             for (BorneRecharge borne : lieu.getBornes()) {
