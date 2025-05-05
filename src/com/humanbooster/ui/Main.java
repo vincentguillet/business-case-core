@@ -1,57 +1,42 @@
 package src.com.humanbooster.ui;
 
+import src.com.humanbooster.controller.AuthController;
+import src.com.humanbooster.controller.BorneController;
+import src.com.humanbooster.controller.LieuController;
+import src.com.humanbooster.controller.ReservationController;
+import src.com.humanbooster.repository.LieuRepository;
+import src.com.humanbooster.repository.ReservationRepository;
+import src.com.humanbooster.repository.UserRepository;
+import src.com.humanbooster.service.*;
+
 import java.util.Scanner;
 
 public class Main {
 
-    public static void main (String[] args) {
-
+    public static void main(String[] args) {
 
         Scanner scanner = new Scanner(System.in);
-        int choixMenu;
 
-        do {
-            // Affichage du menu principal
-            System.out.println("=== Electricity Business ===");
-            System.out.println("1. S'inscrire");
-            System.out.println("2. Valider l'inscription");
-            System.out.println("3. Se connecter");
-            System.out.println("4. Rechercher & réserver une borne");
-            System.out.println("5. Gérer mes réservations");
-            System.out.println("6. Administration (lieux / bornes)");
-            System.out.println("0. Quitter");
-            System.out.print("Votre choix : ");
+        // Repositories
+        UserRepository userRepo = new UserRepository();
+        LieuRepository lieuRepo = new LieuRepository();
+        ReservationRepository reservationRepo = new ReservationRepository();
 
-            choixMenu = scanner.nextInt();
+        // Services
+        AuthService authService = new AuthServiceImpl(userRepo);
+        LieuService lieuService = new LieuServiceImpl(lieuRepo);
+        BorneService borneService = new BorneServiceImpl(lieuRepo);
+        DocumentService documentService = new DocumentServiceImpl(lieuRepo);
+        ReservationService reservationService = new ReservationServiceImpl(reservationRepo, lieuRepo, documentService);
 
-            switch (choixMenu) {
-                case 1:
-                    // Inscription
-                    break;
-                case 2:
-                    // Validation d'inscription
-                    break;
-                case 3:
-                    // Connexion
-                    break;
-                case 4:
-                    // Rechercher & réserver une borne
-                    break;
-                case 5:
-                    // Gérer mes réservations
-                    break;
-                case 6:
-                    // Administration (lieux / bornes)
-                    break;
-                case 0:
-                    System.out.println("Merci pour votre visite, à bientôt !");
-                    break;
-                default:
-                    System.out.println("Choix invalide, veuillez réessayer.");
-            }
-        } while (choixMenu != 0);
+        // Controllers
+        AuthController authController = new AuthController(authService, scanner);
+        LieuController lieuController = new LieuController(lieuService, scanner);
+        BorneController borneController = new BorneController(borneService, scanner);
+        ReservationController reservationController = new ReservationController(reservationService, scanner);
 
-        // Fermeture du scanner
-        scanner.close();
+        // Menu principal
+        Menu menu = new Menu(scanner, authController, lieuController, borneController, reservationController);
+        menu.afficherMenu();
     }
 }
