@@ -8,6 +8,7 @@ public interface LieuService {
 
     LieuRecharge ajouterLieu(String nom, String adresse);
     boolean modifierLieu(String id, String nouveauNom, String nouvelleAdresse);
+    boolean supprimerLieu(String id);
     List<LieuRecharge> listerLieux();
     LieuRecharge trouverParId(String id);
 }
