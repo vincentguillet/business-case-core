@@ -5,16 +5,29 @@ import src.com.humanbooster.service.AuthService;
 
 import java.util.Scanner;
 
+/**
+ * Classe AuthController
+ * Contrôleur pour gérer l'authentification des utilisateurs.
+ */
 public class AuthController {
 
     private final AuthService authService;
     private final Scanner scanner;
 
+    /**
+     * Constructeur de la classe AuthController.
+     *
+     * @param authService Service d'authentification
+     * @param scanner     Scanner pour la saisie utilisateur
+     */
     public AuthController(AuthService authService, Scanner scanner) {
         this.authService = authService;
         this.scanner = scanner;
     }
 
+    /**
+     * Inscrire un nouvel utilisateur.
+     */
     public void inscrire() {
         System.out.println("=== Inscription ===");
         System.out.print("Email : ");
@@ -28,6 +41,9 @@ public class AuthController {
         }
     }
 
+    /**
+     * Valider l'inscription d'un utilisateur.
+     */
     public void validerInscription() {
         System.out.println("=== Validation ===");
         System.out.print("Email : ");
@@ -43,6 +59,9 @@ public class AuthController {
         }
     }
 
+    /**
+     * Connexion d'un utilisateur.
+     */
     public void connexion() {
         System.out.println("=== Connexion ===");
         System.out.print("Email : ");
@@ -58,15 +77,28 @@ public class AuthController {
         }
     }
 
+    /**
+     * Déconnexion de l'utilisateur.
+     */
     public void deconnexion() {
         authService.deconnecter();
         System.out.println("Déconnecté avec succès.");
     }
 
+    /**
+     * Vérifie si l'utilisateur est connecté.
+     *
+     * @return true si l'utilisateur est connecté, false sinon
+     */
     public boolean estConnecte() {
         return authService.estConnecte();
     }
 
+    /**
+     * Récupère l'utilisateur connecté.
+     *
+     * @return l'utilisateur connecté
+     */
     public Utilisateur getUtilisateurConnecte() {
         return authService.getUtilisateurConnecte();
     }
