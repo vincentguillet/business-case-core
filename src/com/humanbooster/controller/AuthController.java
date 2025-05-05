@@ -28,7 +28,7 @@ public class AuthController {
     /**
      * Inscrire un nouvel utilisateur.
      */
-    public void inscrire() {
+    public void inscription() {
         System.out.println("=== Inscription ===");
         System.out.print("Email : ");
         String email = scanner.nextLine();
@@ -82,7 +82,7 @@ public class AuthController {
      */
     public void deconnexion() {
         authService.deconnecter();
-        System.out.println("Déconnecté avec succès.");
+        System.out.println("Déconnexion...");
     }
 
     /**
