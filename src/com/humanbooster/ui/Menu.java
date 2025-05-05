@@ -4,6 +4,7 @@ import src.com.humanbooster.controller.AuthController;
 import src.com.humanbooster.controller.BorneController;
 import src.com.humanbooster.controller.LieuController;
 import src.com.humanbooster.controller.ReservationController;
+import src.com.humanbooster.model.LieuRecharge;
 
 import java.util.Scanner;
 
@@ -87,23 +88,34 @@ public class Menu {
             switch (choix) {
                 case "1" -> {
                     lieuController.afficherTousLesLieux();
-                    System.out.println("a. Ajouter | m. Modifier | r. Retour");
+                    System.out.println("a. Ajouter | m. Modifier | s. Supprimer | r. Retour");
                     String action = scanner.nextLine();
                     switch (action) {
                         case "a" -> lieuController.ajouterLieu();
                         case "m" -> lieuController.modifierLieu();
+                        case "s" -> lieuController.supprimerLieu();
+                        case "r" -> retour = true;
+                        default -> System.out.println("Choix invalide.");
                     }
                 }
                 case "2" -> {
-                    borneController.listerBornes();
-                    System.out.println("a. Ajouter | m. Modifier | s. Supprimer | r. Retour");
-                    String action = scanner.nextLine();
-                    switch (action) {
-                        case "a" -> borneController.ajouterBorne();
-                        case "m" -> borneController.modifierBorne();
-                        case "s" -> borneController.supprimerBorne();
+                    LieuRecharge lieu = lieuController.selectionnerLieu(); // sélection unique
+                    if (lieu == null) return;
+
+                    while (!retour) {
+                        borneController.listerBornes(lieu.getId());
+                        System.out.println("a. Ajouter | m. Modifier | s. Supprimer | r. Retour");
+                        String action = scanner.nextLine();
+                        switch (action) {
+                            case "a" -> borneController.ajouterBorne(lieu.getId());
+                            case "m" -> borneController.modifierBorne(lieu.getId());
+                            case "s" -> borneController.supprimerBorne(lieu.getId());
+                            case "r" -> retour = true;
+                            default -> System.out.println("Choix invalide.");
+                        }
                     }
                 }
+
                 case "3" -> reservationController.menuAdministration();
                 case "r" -> retour = true;
                 default -> System.out.println("Choix invalide.");
