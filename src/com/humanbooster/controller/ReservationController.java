@@ -3,24 +3,31 @@ package src.com.humanbooster.controller;
 import src.com.humanbooster.model.Reservation;
 import src.com.humanbooster.model.StatutReservation;
 import src.com.humanbooster.service.ReservationService;
+import src.com.humanbooster.util.TimeUtil;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Scanner;
 
+/**
+ * Classe ReservationController
+ * Permet de gérer les réservations de bornes de recharge
+ */
 public class ReservationController {
-
 
     private final ReservationService reservationService;
     private final Scanner scanner;
-    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
     public ReservationController(ReservationService reservationService, Scanner scanner) {
         this.reservationService = reservationService;
         this.scanner = scanner;
     }
 
+    /**
+     * Permet à un utilisateur de rechercher une borne disponible et de la réserver
+     *
+     * @param idUtilisateur L'identifiant de l'utilisateur
+     */
     public void rechercherEtReserver(String idUtilisateur) {
         System.out.println("=== Rechercher une borne disponible ===");
 
@@ -58,6 +65,11 @@ public class ReservationController {
         System.out.println("Réservation créée avec statut EN_ATTENTE. ID : " + r.getId());
     }
 
+    /**
+     * Affiche les réservations de l'utilisateur connecté
+     *
+     * @param idUtilisateur L'identifiant de l'utilisateur
+     */
     public void afficherMesReservations(String idUtilisateur) {
         List<Reservation> mesReservations = reservationService.getReservationsUtilisateur(idUtilisateur);
 
@@ -66,48 +78,52 @@ public class ReservationController {
             return;
         }
 
+        // Affichage des réservations
         System.out.println("=== Mes réservations ===");
         for (Reservation r : mesReservations) {
-            System.out.println("- [" + r.getId() + "] Borne: " + r.getIdBorne()
-                    + " | Du: " + r.getDateDebut()
-                    + " au " + r.getDateFin()
-                    + " | Statut: " + r.getStatut());
+            System.out.println("\n------Réservation " + mesReservations.indexOf(r) + 1 + "------");
+            System.out.print(r.toString());
+            System.out.println("---------------------------");
         }
+
     }
 
+    /**
+     * Affiche le menu d'administration pour gérer les réservations
+     */
     public void menuAdministration() {
         System.out.println("=== Administration des réservations ===");
         List<Reservation> toutes = reservationService.getToutesReservations();
 
-        List<Reservation> enAttente = toutes.stream()
+        List<Reservation> reservationsEnAttente = toutes.stream()
                 .filter(r -> r.getStatut() == StatutReservation.EN_ATTENTE)
                 .toList();
 
-        if (enAttente.isEmpty()) {
+        if (reservationsEnAttente.isEmpty()) {
             System.out.println("Aucune réservation en attente.");
             return;
         }
 
-        for (int i = 0; i < enAttente.size(); i++) {
-            Reservation r = enAttente.get(i);
-            System.out.println((i + 1) + ". [" + r.getId() + "] Borne: " + r.getIdBorne()
-                    + " | Utilisateur: " + r.getIdUtilisateur()
-                    + " | Du: " + r.getDateDebut()
-                    + " au " + r.getDateFin());
+        // Affichage des réservations en attente
+        for (Reservation r : reservationsEnAttente) {
+            System.out.println("\n------Réservation " + reservationsEnAttente.indexOf(r) + 1 + "------");
+            System.out.print(r.toString());
+            System.out.println("---------------------------");
         }
 
-        System.out.print("Sélectionner une réservation à traiter (numéro) ou 0 pour annuler : ");
+        System.out.print("\nSélectionner une réservation à traiter (numéro) ou 0 pour annuler : ");
         int choix = Integer.parseInt(scanner.nextLine());
 
-        if (choix < 1 || choix > enAttente.size()) {
+        if (choix < 1 || choix > reservationsEnAttente.size()) {
             System.out.println("Annulation.");
             return;
         }
 
-        Reservation selection = enAttente.get(choix - 1);
+        Reservation selection = reservationsEnAttente.get(choix - 1);
         System.out.print("1. Accepter  2. Refuser : ");
         int action = Integer.parseInt(scanner.nextLine());
 
+        // Traitement de la réservation
         boolean resultat = false;
         if (action == 1) {
             resultat = reservationService.accepterReservation(selection.getId());
@@ -122,14 +138,20 @@ public class ReservationController {
         }
     }
 
+    /**
+     * Saisit une date et une heure au format spécifié
+     *
+     * @param label Le label à afficher pour la saisie
+     * @return La date et l'heure saisies
+     */
     private LocalDateTime saisirDateHeure(String label) {
         while (true) {
             System.out.print(label);
             String input = scanner.nextLine();
             try {
-                return LocalDateTime.parse(input, FORMATTER);
+                return LocalDateTime.parse(input, TimeUtil.FORMATTER);
             } catch (Exception e) {
-                System.out.println("Format invalide. Attendu : yyyy-MM-dd HH:mm");
+                System.out.println("Format invalide. Attendu : dd/MM/yyyy HH:mm");
             }
         }
     }
