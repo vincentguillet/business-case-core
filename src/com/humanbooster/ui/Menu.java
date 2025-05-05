@@ -45,9 +45,13 @@ public class Menu {
             String choix = scanner.nextLine();
 
             switch (choix) {
-                case "1" -> authController.inscrire();
+                // S'inscrire
+                case "1" -> authController.inscription();
+                // Valider l'inscription
                 case "2" -> authController.validerInscription();
+                // Se connecter
                 case "3" -> authController.connexion();
+                // Rechercher et réserver une borne
                 case "4" -> {
                     if (!authController.estConnecte()) {
                         System.out.println("Veuillez vous connecter.");
@@ -55,6 +59,7 @@ public class Menu {
                     }
                     reservationController.rechercherEtReserver(authController.getUtilisateurConnecte().getId());
                 }
+                // Gérer les réservations
                 case "5" -> {
                     if (!authController.estConnecte()) {
                         System.out.println("Veuillez vous connecter.");
@@ -62,8 +67,11 @@ public class Menu {
                     }
                     reservationController.afficherMesReservations(authController.getUtilisateurConnecte().getId());
                 }
+                // Menu d'administration
                 case "6" -> menuAdmin();
+                // Quitter le programme
                 case "0" -> {
+                    authController.deconnexion();
                     quitter = true;
                     System.out.println("Au revoir !");
                 }
@@ -72,6 +80,9 @@ public class Menu {
         }
     }
 
+    /**
+     * Affiche le menu d'administration pour gérer les lieux, bornes et réservations
+     */
     private void menuAdmin() {
         boolean retour = false;
 
@@ -86,6 +97,7 @@ public class Menu {
             String choix = scanner.nextLine();
 
             switch (choix) {
+                // Gérer les lieux
                 case "1" -> {
                     lieuController.afficherTousLesLieux();
                     System.out.println("a. Ajouter | m. Modifier | s. Supprimer | r. Retour");
@@ -98,6 +110,7 @@ public class Menu {
                         default -> System.out.println("Choix invalide.");
                     }
                 }
+                // Gérer les bornes
                 case "2" -> {
                     LieuRecharge lieu = lieuController.selectionnerLieu(); // sélection unique
                     if (lieu == null) return;
@@ -116,7 +129,9 @@ public class Menu {
                     }
                 }
 
+                // Traiter les réservations
                 case "3" -> reservationController.menuAdministration();
+                // Retour au menu principal
                 case "r" -> retour = true;
                 default -> System.out.println("Choix invalide.");
             }
