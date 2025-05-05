@@ -6,9 +6,9 @@ package src.com.humanbooster.model;
  */
 public class BorneRecharge {
 
-    private int id;
+    private String id;
     private EtatBorne etat;
-    private int tarifHoraire; // Exprimé en centimes
+    private double tarifHoraire;
 
     /**
      * Constructeur de la classe BorneRecharge
@@ -17,7 +17,7 @@ public class BorneRecharge {
      * @param etat       État de la borne de recharge (DISPONIBLE, OCCUPEE, EN_PANNE)
      * @param tarifHoraire Tarif horaire de la borne de recharge (en centimes)
      */
-    public BorneRecharge(int id, EtatBorne etat, int tarifHoraire) {
+    public BorneRecharge(String id, EtatBorne etat, double tarifHoraire) {
         this.id = id;
         this.etat = etat;
         this.tarifHoraire = tarifHoraire;
@@ -27,7 +27,7 @@ public class BorneRecharge {
      * Récupère l'identifiant unique de la borne de recharge
      * @return L'identifiant unique de la borne de recharge
      */
-    public int getId() {
+    public String getId() {
         return id;
     }
 
@@ -35,7 +35,7 @@ public class BorneRecharge {
      * Définit l'identifiant unique de la borne de recharge
      * @param id L'identifiant unique de la borne de recharge
      */
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -59,7 +59,7 @@ public class BorneRecharge {
      * Récupère le tarif horaire de la borne de recharge
      * @return Le tarif horaire de la borne de recharge (en centimes)
      */
-    public int getTarifHoraire() {
+    public double getTarifHoraire() {
         return tarifHoraire;
     }
 
@@ -67,7 +67,7 @@ public class BorneRecharge {
      * Définit le tarif horaire de la borne de recharge
      * @param tarifHoraire Le tarif horaire de la borne de recharge (en centimes)
      */
-    public void setTarifHoraire(int tarifHoraire) {
+    public void setTarifHoraire(double tarifHoraire) {
         this.tarifHoraire = tarifHoraire;
     }
 }

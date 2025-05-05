@@ -1,5 +1,6 @@
 package src.com.humanbooster.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -8,41 +9,45 @@ import java.util.List;
  */
 public class LieuRecharge {
 
-    private int id;
+    private String id;
     private String nom;
+    private String adresse;
     private List<BorneRecharge> bornes;
 
     /**
      * Constructeur de la classe LieuRecharge
      *
-     * @param id    Identifiant unique du lieu de recharge
-     * @param nom   Nom du lieu de recharge
-     * @param bornes Liste des bornes de recharge associées à ce lieu
+     * @param id     Identifiant unique du lieu de recharge
+     * @param nom    Nom du lieu de recharge
      */
-    public LieuRecharge(int id, String nom, List<BorneRecharge> bornes) {
+    public LieuRecharge(String id, String nom, String adresse) {
         this.id = id;
         this.nom = nom;
-        this.bornes = bornes;
+        this.adresse = adresse;
+        this.bornes = new ArrayList<>();
     }
 
     /**
      * Récupère l'identifiant unique du lieu de recharge
+     *
      * @return L'identifiant unique du lieu de recharge
      */
-    public int getId() {
+    public String getId() {
         return id;
     }
 
     /**
      * Définit l'identifiant unique du lieu de recharge
+     *
      * @param id L'identifiant unique du lieu de recharge
      */
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
     /**
      * Récupère le nom du lieu de recharge
+     *
      * @return Le nom du lieu de recharge
      */
     public String getNom() {
@@ -51,6 +56,7 @@ public class LieuRecharge {
 
     /**
      * Définit le nom du lieu de recharge
+     *
      * @param nom Le nom du lieu de recharge
      */
     public void setNom(String nom) {
@@ -58,7 +64,26 @@ public class LieuRecharge {
     }
 
     /**
+     * Récupère l'adresse du lieu de recharge
+     *
+     * @return L'adresse du lieu de recharge
+     */
+    public String getAdresse() {
+        return adresse;
+    }
+
+    /**
+     * Définit l'adresse du lieu de recharge
+     *
+     * @param adresse L'adresse du lieu de recharge
+     */
+    public void setAdresse(String adresse) {
+        this.adresse = adresse;
+    }
+
+    /**
      * Récupère la liste des bornes de recharge associées à ce lieu
+     *
      * @return La liste des bornes de recharge
      */
     public List<BorneRecharge> getBornes() {
@@ -67,9 +92,18 @@ public class LieuRecharge {
 
     /**
      * Définit la liste des bornes de recharge associées à ce lieu
+     *
      * @param bornes La liste des bornes de recharge
      */
     public void setBornes(List<BorneRecharge> bornes) {
         this.bornes = bornes;
+    }
+
+    public void ajouterBorne(BorneRecharge borne) {
+        this.bornes.add(borne);
+    }
+
+    public void supprimerBorne(String borneId) {
+        this.bornes.removeIf(b -> b.getId().equals(borneId));
     }
 }

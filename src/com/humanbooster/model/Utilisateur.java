@@ -6,10 +6,10 @@ package src.com.humanbooster.model;
  */
 public class Utilisateur {
 
-    private int id;
+    private String id;
     private String email;
     private String motDePasse;
-    private int codeValidation;
+    private String codeValidation;
     private boolean estValide;
 
     /**
@@ -21,7 +21,7 @@ public class Utilisateur {
      * @param codeValidation Code de validation de l'utilisateur
      * @param estValide     Indique si l'utilisateur est valide ou non
      */
-    public Utilisateur(int id, String email, String motDePasse, int codeValidation, boolean estValide) {
+    public Utilisateur(String id, String email, String motDePasse, String codeValidation, boolean estValide) {
         this.id = id;
         this.email = email;
         this.motDePasse = motDePasse;
@@ -33,7 +33,7 @@ public class Utilisateur {
      * Récupère l'identifiant unique de l'utilisateur
      * @return L'identifiant unique de l'utilisateur
      */
-    public int getId() {
+    public String getId() {
         return id;
     }
 
@@ -41,7 +41,7 @@ public class Utilisateur {
      * Définit l'identifiant unique de l'utilisateur
      * @param id L'identifiant unique de l'utilisateur
      */
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -81,7 +81,7 @@ public class Utilisateur {
      * Récupère le code de validation de l'utilisateur
      * @return Le code de validation de l'utilisateur
      */
-    public int getCodeValidation() {
+    public String getCodeValidation() {
         return codeValidation;
     }
 
@@ -89,7 +89,7 @@ public class Utilisateur {
      * Définit le code de validation de l'utilisateur
      * @param codeValidation Le code de validation de l'utilisateur
      */
-    public void setCodeValidation(int codeValidation) {
+    public void setCodeValidation(String codeValidation) {
         this.codeValidation = codeValidation;
     }
 

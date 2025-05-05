@@ -4,30 +4,31 @@ import java.time.LocalDateTime;
 
 /**
  * Classe Reservation
- * Décrit une réservation d'une borne de recharge par un utilisateur avec ses attributs et méthodes
+ * Décrit une réservation d'une idBorne de recharge par un idUtilisateur avec ses attributs et méthodes
  */
 public class Reservation {
 
-    private int id;
-    private Utilisateur utilisateur;
-    private BorneRecharge borne;
+    private String id;
+    private String idUtilisateur;
+    private String idBorne;
     private LocalDateTime dateDebut;
     private LocalDateTime dateFin;
     private StatutReservation statut;
 
     /**
      * Constructeur de la classe Reservation
-     * @param id Identifiant unique de la réservation
-     * @param utilisateur Utilisateur ayant effectué la réservation
-     * @param borne Borne de recharge réservée
-     * @param dateDebut Date et heure de début de la réservation
-     * @param dateFin Date et heure de fin de la réservation
-     * @param statut Statut de la réservation
+     *
+     * @param id            Identifiant unique de la réservation
+     * @param idUtilisateur Identifiant de l'utilisateur ayant effectué la réservation
+     * @param idBorne       Identifiant de la borne de recharge réservée
+     * @param dateDebut     Date et heure de début de la réservation
+     * @param dateFin       Date et heure de fin de la réservation
+     * @param statut        Statut de la réservation
      */
-    public Reservation(int id, Utilisateur utilisateur, BorneRecharge borne, LocalDateTime dateDebut, LocalDateTime dateFin, StatutReservation statut) {
+    public Reservation(String id, String idUtilisateur, String idBorne, LocalDateTime dateDebut, LocalDateTime dateFin, StatutReservation statut) {
         this.id = id;
-        this.utilisateur = utilisateur;
-        this.borne = borne;
+        this.idUtilisateur = idUtilisateur;
+        this.idBorne = idBorne;
         this.dateDebut = dateDebut;
         this.dateFin = dateFin;
         this.statut = statut;
@@ -35,54 +36,61 @@ public class Reservation {
 
     /**
      * Récupère l'identifiant unique de la réservation
+     *
      * @return L'identifiant unique de la réservation
      */
-    public int getId() {
+    public String getId() {
         return id;
     }
 
     /**
      * Définit l'identifiant unique de la réservation
+     *
      * @param id L'identifiant unique de la réservation
      */
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
     /**
-     * Récupère l'utilisateur ayant effectué la réservation
-     * @return L'utilisateur ayant effectué la réservation
+     * Récupère l'idUtilisateur ayant effectué la réservation
+     *
+     * @return L'idUtilisateur ayant effectué la réservation
      */
-    public Utilisateur getUtilisateur() {
-        return utilisateur;
+    public String getIdUtilisateur() {
+        return idUtilisateur;
     }
 
     /**
-     * Définit l'utilisateur ayant effectué la réservation
-     * @param utilisateur L'utilisateur ayant effectué la réservation
+     * Définit l'id de l'utilisateur ayant effectué la réservation
+     *
+     * @param idUtilisateur L'id de l'utilisateur ayant effectué la réservation
      */
-    public void setUtilisateur(Utilisateur utilisateur) {
-        this.utilisateur = utilisateur;
+    public void setIdUtilisateur(String idUtilisateur) {
+        this.idUtilisateur = idUtilisateur;
     }
 
     /**
-     * Récupère la borne de recharge réservée
-     * @return La borne de recharge réservée
+     * Récupère l'id de la borne de recharge réservée
+     *
+     * @return L'id de la borne de recharge réservée
      */
-    public BorneRecharge getBorne() {
-        return borne;
+    public String getIdBorne() {
+        return idBorne;
     }
 
     /**
-     * Définit la borne de recharge réservée
-     * @param borne La borne de recharge réservée
+     * Définit l'id de la borne de recharge réservée
+     *
+     * @param idBorne L'id de la borne de recharge réservée
      */
-    public void setBorne(BorneRecharge borne) {
-        this.borne = borne;
+    public void setIdBorne(String idBorne) {
+        this.idBorne = idBorne;
     }
 
     /**
      * Récupère la date et l'heure de début de la réservation
+     *
      * @return La date et l'heure de début de la réservation
      */
     public LocalDateTime getDateDebut() {
@@ -91,6 +99,7 @@ public class Reservation {
 
     /**
      * Définit la date et l'heure de début de la réservation
+     *
      * @param dateDebut La date et l'heure de début de la réservation
      */
     public void setDateDebut(LocalDateTime dateDebut) {
@@ -99,6 +108,7 @@ public class Reservation {
 
     /**
      * Récupère la date et l'heure de fin de la réservation
+     *
      * @return La date et l'heure de fin de la réservation
      */
     public LocalDateTime getDateFin() {
@@ -107,6 +117,7 @@ public class Reservation {
 
     /**
      * Définit la date et l'heure de fin de la réservation
+     *
      * @param dateFin La date et l'heure de fin de la réservation
      */
     public void setDateFin(LocalDateTime dateFin) {
@@ -115,6 +126,7 @@ public class Reservation {
 
     /**
      * Récupère le statut de la réservation
+     *
      * @return Le statut de la réservation
      */
     public StatutReservation getStatut() {
@@ -123,6 +135,7 @@ public class Reservation {
 
     /**
      * Définit le statut de la réservation
+     *
      * @param statut Le statut de la réservation
      */
     public void setStatut(StatutReservation statut) {
