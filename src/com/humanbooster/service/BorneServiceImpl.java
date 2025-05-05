@@ -3,15 +3,18 @@ package src.com.humanbooster.service;
 import src.com.humanbooster.model.BorneRecharge;
 import src.com.humanbooster.model.LieuRecharge;
 import src.com.humanbooster.repository.LieuRepository;
+import src.com.humanbooster.repository.ReservationRepository;
 
 import java.util.List;
 
 public class BorneServiceImpl implements BorneService {
 
     private final LieuRepository lieuRepository;
+    private final ReservationRepository reservationRepository;
 
-    public BorneServiceImpl(LieuRepository lieuRepository) {
+    public BorneServiceImpl(LieuRepository lieuRepository, ReservationRepository reservationRepository) {
         this.lieuRepository = lieuRepository;
+        this.reservationRepository = reservationRepository;
     }
 
     @Override
@@ -48,6 +51,15 @@ public class BorneServiceImpl implements BorneService {
     public boolean supprimerBorne(String idLieu, String idBorne) {
         LieuRecharge lieu = lieuRepository.findById(idLieu);
         if (lieu == null) return false;
+
+        // Vérifie s'il existe une réservation FUTURE sur cette borne
+        boolean hasFutureReservation = reservationRepository.findByBorneId(idBorne).stream()
+                .anyMatch(r -> r.getDateFin().isAfter(java.time.LocalDateTime.now()));
+
+        if (hasFutureReservation) {
+            System.out.println("Impossible de supprimer cette borne : des réservations futures existent.");
+            return false;
+        }
 
         boolean removed = lieu.getBornes().removeIf(b -> b.getId().equals(idBorne));
         if (removed) {
