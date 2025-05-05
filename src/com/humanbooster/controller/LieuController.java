@@ -49,6 +49,16 @@ public class LieuController {
         else System.out.println("Erreur lors de la modification.");
     }
 
+    public void supprimerLieu() {
+        System.out.println("=== Supprimer un lieu ===");
+
+        LieuRecharge lieu = selectionnerLieu();
+        if (lieu == null) return;
+
+        boolean ok = lieuService.supprimerLieu(lieu.getId());
+        System.out.println(ok ? "Lieu supprimé." : "Échec : impossible de supprimer ce lieu.");
+    }
+
     public void afficherTousLesLieux() {
         List<LieuRecharge> lieux = lieuService.listerLieux();
         if (lieux.isEmpty()) {
@@ -58,7 +68,7 @@ public class LieuController {
 
         System.out.println("=== Lieux disponibles ===");
         for (LieuRecharge l : lieux) {
-            System.out.println("- [" + l.getId() + "] " + l.getNom() + " (" + l.getAdresse() + ")");
+            System.out.println("- " + l.getNom() + " (" + l.getAdresse() + ")");
         }
     }
 
@@ -85,5 +95,4 @@ public class LieuController {
             return null;
         }
     }
-
 }
