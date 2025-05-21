@@ -1,44 +1,57 @@
 .
+├── Dockerfile
 ├── README.md
-├── data
-│ ├── lieux.json
-│ ├── reservations.json
-│ └── utilisateurs.json
+├── annexes
+│   └── Exam.md
+├── dependency-reduced-pom.xml
+├── docker-compose.yml
 ├── exports
-│ └── recu_8f1627ad-30ac-4f8d-b6ca-b5566eb31477.txt
+│   └── recu_922887623.txt
+├── pom.xml
 ├── src
-│ └── com
-│     └── humanbooster
-│         ├── controller
-│         │ ├── AuthController.java
-│         │ ├── BorneController.java
-│         │ ├── LieuController.java
-│         │ └── ReservationController.java
-│         ├── model
-│         │ ├── BorneRecharge.java
-│         │ ├── EtatBorne.java
-│         │ ├── LieuRecharge.java
-│         │ ├── Reservation.java
-│         │ ├── StatutReservation.java
-│         │ └── Utilisateur.java
-│         ├── repository
-│         │ ├── LieuRepository.java
-│         │ ├── ReservationRepository.java
-│         │ └── UserRepository.java
-│         ├── service
-│         │ ├── AuthService.java
-│         │ ├── AuthServiceImpl.java
-│         │ ├── BorneService.java
-│         │ ├── BorneServiceImpl.java
-│         │ ├── DocumentService.java
-│         │ ├── DocumentServiceImpl.java
-│         │ ├── LieuService.java
-│         │ ├── LieuServiceImpl.java
-│         │ ├── ReservationService.java
-│         │ └── ReservationServiceImpl.java
-│         ├── ui
-│         │ ├── Main.java
-│         │ └── Menu.java
-│         └── util
-│             └── JsonFileManager.java
-└── tree.txt
+│   └── main
+│       └── java
+│           └── com
+│               └── humanbooster
+│                   ├── config
+│                   │   └── HibernateConfig.java
+│                   ├── controller
+│                   │   ├── AuthController.java
+│                   │   ├── BorneController.java
+│                   │   ├── LieuController.java
+│                   │   └── ReservationController.java
+│                   ├── dao
+│                   │   ├── BorneRechargeDao.java
+│                   │   ├── GenericDao.java
+│                   │   ├── GenericDaoImpl.java
+│                   │   ├── LieuRechargeDao.java
+│                   │   ├── ReservationDao.java
+│                   │   └── UtilisateurDao.java
+│                   ├── model
+│                   │   ├── BorneRecharge.java
+│                   │   ├── EtatBorne.java
+│                   │   ├── LieuRecharge.java
+│                   │   ├── Reservation.java
+│                   │   ├── RoleUtilisateur.java
+│                   │   ├── StatutReservation.java
+│                   │   └── Utilisateur.java
+│                   ├── service
+│                   │   ├── AuthService.java
+│                   │   ├── AuthServiceImpl.java
+│                   │   ├── BorneService.java
+│                   │   ├── BorneServiceImpl.java
+│                   │   ├── DocumentService.java
+│                   │   ├── DocumentServiceImpl.java
+│                   │   ├── LieuService.java
+│                   │   ├── LieuServiceImpl.java
+│                   │   ├── ReservationService.java
+│                   │   └── ReservationServiceImpl.java
+│                   ├── ui
+│                   │   ├── Main.java
+│                   │   └── Menu.java
+│                   └── util
+│                       └── TimeUtil.java
+├── tree.txt
+└── wait-for-it.sh
+
+14 directories, 40 files

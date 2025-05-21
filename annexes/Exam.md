@@ -1,74 +1,111 @@
-# Cahier des charges – Electricity Business (TP Java SE )
+# Cahier des charges – Electricity Business (TP Java Hibernate – Évaluation DAO ORM)
 
-### 1. Portée
+## 1. **Objectif général**
 
-| Catégorie | Exigences **obligatoires** (à livrer) | **Bonus**  |
+Le projet "Electricity Business" évolue : vous allez désormais **connecter l'application à une base de données** en utilisant **Hibernate**.
+
+L’objectif est de persister les entités précédemment manipulées en mémoire, via une **couche DAO** propre, fonctionnelle et bien structurée.
+
+Ce TP constitue une **évaluation individuelle**. Le rendu doit respecter les consignes ci-dessous.
+
+---
+
+## 2. **Portée fonctionnelle**
+
+### **Fonctionnalités obligatoires**
+
+Vous devez :
+
+- Configurer **Hibernate** avec une base H2 ou MySQL. (spécifiez dans votre README l’architecture choisie)
+- Annoter et mapper les entités suivantes :
+
+  `Utilisateur`, `LieuRecharge`, `BorneRecharge`, `Reservation`
+
+- Implémenter pour chacune un DAO :
+   - Interface de DAO
+   - Implémentation concrète
+- Fournir les opérations **CRUD minimales** :
+   - **Créer**
+   - **Lire par identifiant**
+   - **Lire tous**
+   - **Mettre à jour**
+   - **Supprimer**
+
+> Les tests peuvent se faire via une classe App.java ou des méthodes statiques de test simples.
+>
+
+---
+
+## 3. **Contraintes techniques**
+
+| Élément | Détail attendu |
+| --- | --- |
+| **Technologie** | Java 20+, Hibernate 6, JDBC (H2 ou MySQL au choix) |
+| **Aucune bibliothèque externe** | Seules les dépendances Hibernate sont autorisées |
+| **Structure du projet** | Voir ci-dessous |
+| **ORM** | Annotations JPA uniquement (`@Entity`, `@Id`, `@OneToMany`, etc.) |
+| **Relationnelles** | Les relations doivent être correctement modélisées (ex : une borne appartient à un lieu, une réservation à un utilisateur et à une borne) |
+
+### 📁 **Structure du code attendue**
+
+```
+src/
+ ├─ model/         → entités annotées (Hibernate)
+ ├─ dao/           → interfaces + implémentations DAO
+ └─ App.java       → classe principale ou tests
+resources/
+ └─ hibernate.cfg.xml
+
+```
+
+(vous pouvez également placer la gestion de la sessionFactory dans un dossier util)
+
+---
+
+## 4. **Modèle de données à mapper**
+
+| Entité | Attributs principaux | Relations |
 | --- | --- | --- |
-| **Comptes** | - Inscription ➜ génération d’un *code* - Validation du compte par le code - Connexion / déconnexion | — |
-| **Bornes & lieux** | - Ajouter / modifier un **Lieu** - Ajouter / modifier une **Borne** - Supprimer une borne **si** aucune réservation future | - Historique des changements de tarif |
-| **Réservation** | - Chercher bornes **DISPONIBLES** pour un créneau - Créer une réservation *(statut : EN_ATTENTE)* - Accepter / refuser une réservation | - Filtrage des réservations (par date, borne…) |
-| **Documents** | - Générer un *reçu* texte (`.txt`) lors de l’acceptation | - Générer un pseudo‑PDF (`.txt` structuré) - Export CSV/Excel de l’historique |
-| **IHM console** | - Menu principal clair - Validation des entrées utilisateur | - Couleurs ANSI ou ASCII‑art « carte » |
+| `Utilisateur` | `id`, `email`, `motDePasse`, `codeValidation`, `valide`, `role` | `@OneToMany` réservations |
+| `LieuRecharge` | `id`, `nom`, `adresse` | `@OneToMany` bornes |
+| `BorneRecharge` | `id`, `etat`, `tarifHoraire` | `@ManyToOne` lieu  `@OneToMany` réservations |
+| `Reservation` | `id`, `dateDebut`, `dateFin`, `statut` | `@ManyToOne` utilisateur  `@ManyToOne` borne |
 
 ---
 
-### 2. Contraintes techniques
+## 5. **Livrables obligatoires**
 
-1. **Technologie** : JDK 20+ ; pas d’outils de build, pas de bibliothèque externe.
-2. **Packages** attendus :
-    - `model` – entités : `Utilisateur`, `LieuRecharge`, `BorneRecharge`, `Reservation`, énumérations `EtatBorne`, `StatutReservation`.
-    - `interfaces` – abstractions : `AuthentificationService`, `ReservationService`, `BorneService`, `DocumentService`.
-    - `services` – implémentations en mémoire (collections Java).
-    - `ui` – menus console, classe `Main`.
-3. **Persistance** : aucune (données volatiles). *(Bonus : sérialisation Java dans un fichier à la fermeture)*
-4. **Tests unitaires** : non demandés.
+Vous devez rendre :
 
----
-
-### 3. Modèle de données minimal
-
-```
-Utilisateur { id, email, motDePasse, codeValidation, estValide }
-LieuRecharge { id, nom, adresse, bornes: List<BorneRecharge> }
-BorneRecharge { id, etat, tarifHoraire }
-Reservation { id, utilisateur, borne, dateDebut, dateFin, statut }
-
-```
+- Le code source complet
+- Le fichier `hibernate.cfg.xml` (ou properties) fonctionnel
+- Un fichier `README.md` avec :
+   - Description de votre implémentation
+   - Explication de vos choix techniques
+   - Résultat attendu des méthodes DAO testées
 
 ---
 
-### 4. Scénario d’utilisation (workflow simplifié)
+## 6. **Fonctionnalités Bonus (facultatives)**
 
-1. **Inscription** → affichage du code dans la console « (e‑mail simulé) ».
-2. **Validation** du compte avec ce code.
-3. **Connexion**.
-4. **Recherche** d’une borne libre pour un créneau (la console liste les bornes “DISPONIBLE”).
-5. **Réservation** → statut initial *EN_ATTENTE*.
-6. **Opérateur** accepte ou refuse (le développeur peut commuter l’application en “mode opérateur” via le menu).
-7. Sur *ACCEPTÉE* → génération d’un fichier `recu_<id>.txt` dans `/exports`.
+Implémentez une ou plusieurs des fonctionnalités suivantes si vous souhaitez aller plus loin et valoriser votre code.
 
----
+Ces fonctionnalités nécessitent une manipulation **plus avancée des requêtes** :
 
-### 5. Menu console de référence *(obligatoire)*
+1. 🔍 **Rechercher toutes les bornes disponibles** pour un créneau horaire donné (non déjà réservées à ce moment).
+2. 📅 **Lister toutes les réservations** faites par un utilisateur donné, triées par date.
+3. 📈 **Calculer le montant total** à facturer pour une réservation terminée (durée × tarif horaire de la borne).
+4. 🧾 **Rechercher les bornes** dont le tarif horaire dépasse une certaine valeur.
+5. 🛠️ **Trouver les bornes actuellement en maintenance** ou inactives (filtrage sur l'état).
 
-```
-=== Electricity Business ===
-1. S'inscrire
-2. Valider l'inscription
-3. Se connecter
-4. Rechercher & réserver une borne
-5. Gérer mes réservations
-6. Administration (lieux / bornes)
-0. Quitter
+## 7. **Critères d’évaluation**
 
-```
+| Critère | Détail |
+| --- | --- |
+| **Respect du cahier des charges** | Fonctionnalités obligatoires présentes |
+| **Qualité du code** | Structure, clarté, noms, indentation |
+| **Modélisation correcte** | Entités, relations, cohérence JPA |
+| **Fonctionnement** | Le code compile, s'exécute, et persiste correctement |
+| **Bonus** | Fonctionnalités optionnelles implémentées correctement |
 
----
 
-### 6. Livrables
-
-1. **Code source** complet (`src/`)
-2. **README.md** avec liste claire :
-    - Partie **core** terminée.
-    - Bonus implémentés (facultatif).
-3. Dossier `exports/` contenant les reçus générés.
