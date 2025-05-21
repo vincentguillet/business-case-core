@@ -11,7 +11,7 @@ import java.util.List;
  * @param <T>  Le type de l'entité
  * @param <ID> Le type de l'identifiant de l'entité
  */
-public class GenericDaoImpl<T, ID> implements  GenericDao<T,ID> {
+public abstract class GenericDaoImpl<T, ID> implements  GenericDao<T,ID> {
 
     protected final SessionFactory sessionFactory;
     private final Class<T> entityClass;
