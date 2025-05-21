@@ -17,32 +17,50 @@ public class Main {
 
     public static void main(String[] args) {
 
-        System.out.println("Démarrage de l'application");
+        System.out.println("Démarrage de l'application...");
 
-        SessionFactory sessionFactory = HibernateConfig.getSessionFactory();
-
+        System.out.println("\nLancez-vous ce projet via une commande docker ? (oui/non)");
         Scanner scanner = new Scanner(System.in);
 
-        // Dao
-        UtilisateurDao utilisateurDao = new UtilisateurDao(sessionFactory);
-        LieuRechargeDao lieuRechargeDao = new LieuRechargeDao(sessionFactory);
-        ReservationDao reservationDao = new ReservationDao(sessionFactory);
+        String reponse = scanner.nextLine();
 
-        // Service
-        AuthService authService = new AuthServiceImpl(utilisateurDao);
-        LieuService lieuService = new LieuServiceImpl(lieuRechargeDao);
-        BorneService borneService = new BorneServiceImpl(lieuRechargeDao, reservationDao);
-        DocumentService documentService = new DocumentServiceImpl(lieuRechargeDao);
-        ReservationService reservationService = new ReservationServiceImpl(reservationDao, lieuRechargeDao, utilisateurDao, documentService);
+        if (reponse.equalsIgnoreCase("oui") || reponse.equalsIgnoreCase("o")) {
+            HibernateConfig.setLocalEnvironment(false);
+            System.out.println("[DEBUG] localDev = " + HibernateConfig.isLocalEnvironment());
+        } else if (reponse.equalsIgnoreCase("non") || reponse.equalsIgnoreCase("n")) {
+            HibernateConfig.setLocalEnvironment(true);
+            System.out.println("[DEBUG] localDev = " + HibernateConfig.isLocalEnvironment());
+        } else {
+            System.out.println("Réponse non valide. Lancement en mode local par défaut.");
+            System.out.println("[DEBUG] localDev = " + HibernateConfig.isLocalEnvironment());
+        }
 
-        // Controller
-        AuthController authController = new AuthController(authService, scanner);
-        LieuController lieuController = new LieuController(lieuService, scanner);
-        BorneController borneController = new BorneController(borneService, lieuController, scanner);
-        ReservationController reservationController = new ReservationController(reservationService, scanner);
+        try {
+            SessionFactory sessionFactory = HibernateConfig.getSessionFactory();
 
-        // Menu principal
-        Menu menu = new Menu(scanner, authController, lieuController, borneController, reservationController);
-        menu.afficherMenu();
+            // Dao
+            UtilisateurDao utilisateurDao = new UtilisateurDao(sessionFactory);
+            LieuRechargeDao lieuRechargeDao = new LieuRechargeDao(sessionFactory);
+            ReservationDao reservationDao = new ReservationDao(sessionFactory);
+
+            // Service
+            AuthService authService = new AuthServiceImpl(utilisateurDao);
+            LieuService lieuService = new LieuServiceImpl(lieuRechargeDao);
+            BorneService borneService = new BorneServiceImpl(lieuRechargeDao, reservationDao);
+            DocumentService documentService = new DocumentServiceImpl(lieuRechargeDao);
+            ReservationService reservationService = new ReservationServiceImpl(reservationDao, lieuRechargeDao, utilisateurDao, documentService);
+
+            // Controller
+            AuthController authController = new AuthController(authService, scanner);
+            LieuController lieuController = new LieuController(lieuService, scanner);
+            BorneController borneController = new BorneController(borneService, lieuController, scanner);
+            ReservationController reservationController = new ReservationController(reservationService, scanner);
+
+            // Menu principal
+            Menu menu = new Menu(scanner, authController, lieuController, borneController, reservationController);
+            menu.afficherMenu();
+        } catch (Exception e) {
+            System.err.println("Erreur lors de la création de la SessionFactory : " + e.getMessage());
+        }
     }
 }
