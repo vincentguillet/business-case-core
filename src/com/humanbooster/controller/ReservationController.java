@@ -49,7 +49,7 @@ public class ReservationController {
         System.out.println("Bornes disponibles :");
         for (int i = 0; i < disponibles.size(); i++) {
             Reservation r = disponibles.get(i);
-            System.out.println((i + 1) + ". Borne ID : " + r.getIdBorne());
+            System.out.println((i + 1) + ". Borne ID : " + r.getBorneRecharge());
         }
 
         System.out.print("Sélectionner une borne (numéro) ou 0 pour annuler : ");
@@ -60,7 +60,7 @@ public class ReservationController {
             return;
         }
 
-        Long idBorne = disponibles.get(choix - 1).getIdBorne();
+        Long idBorne = disponibles.get(choix - 1).getBorneRecharge().getId();
         Reservation r = reservationService.creerReservation(idUtilisateur, idBorne, debut, fin);
         System.out.println("Réservation créée avec statut EN_ATTENTE. ID : " + r.getId());
     }

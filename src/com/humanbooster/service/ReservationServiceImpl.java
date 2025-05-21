@@ -2,12 +2,12 @@ package src.com.humanbooster.service;
 
 import src.com.humanbooster.dao.LieuRechargeDao;
 import src.com.humanbooster.dao.ReservationDao;
+import src.com.humanbooster.dao.UtilisateurDao;
 import src.com.humanbooster.model.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 /**
  * Implémentation du service de réservation.
@@ -16,28 +16,20 @@ public class ReservationServiceImpl implements ReservationService {
 
     private final ReservationDao reservationDao;
     private final LieuRechargeDao lieuDao;
+    private final UtilisateurDao utilisateurDao;
     private final DocumentService documentService;
 
     /**
      * Constructeur de la classe ReservationServiceImpl.
-     *
-     * @param reservationDao le dépôt de réservations
-     * @param lieuRechargeDao        le dépôt de lieux
-     * @param documentService       le service de documents
      */
-    public ReservationServiceImpl(ReservationDao reservationDao, LieuRechargeDao lieuRechargeDao, DocumentService documentService) {
+    public ReservationServiceImpl(ReservationDao reservationDao, LieuRechargeDao lieuRechargeDao,
+                                  UtilisateurDao utilisateurDao, DocumentService documentService) {
         this.reservationDao = reservationDao;
         this.lieuDao = lieuRechargeDao;
+        this.utilisateurDao = utilisateurDao;
         this.documentService = documentService;
     }
 
-    /**
-     * Cherche les bornes disponibles entre deux dates.
-     *
-     * @param debut la date de début
-     * @param fin   la date de fin
-     * @return une liste de réservations disponibles
-     */
     @Override
     public List<Reservation> chercherBornesDisponibles(LocalDateTime debut, LocalDateTime fin) {
         List<Reservation> toutes = reservationDao.readAll();
@@ -51,7 +43,7 @@ public class ReservationServiceImpl implements ReservationService {
         }
 
         List<Long> bornesIndisponibles = conflits.stream()
-                .map(Reservation::getIdBorne)
+                .map(r -> r.getBorneRecharge().getId())
                 .distinct()
                 .toList();
 
@@ -61,14 +53,8 @@ public class ReservationServiceImpl implements ReservationService {
         for (LieuRecharge lieu : lieux) {
             for (BorneRecharge borne : lieu.getBornes()) {
                 if (!bornesIndisponibles.contains(borne.getId()) && borne.getEtat() == EtatBorne.DISPONIBLE) {
-                    Reservation r = new Reservation(
-                            Long.valueOf(UUID.randomUUID().toString()),
-                            null,
-                            borne.getId(),
-                            debut,
-                            fin,
-                            StatutReservation.EN_ATTENTE
-                    );
+                    // On crée une réservation "simulée" (non persistée) pour afficher les créneaux disponibles
+                    Reservation r = new Reservation(debut, fin, StatutReservation.EN_ATTENTE, null, borne);
                     bornesDisponibles.add(r);
                 }
             }
@@ -77,35 +63,30 @@ public class ReservationServiceImpl implements ReservationService {
         return bornesDisponibles;
     }
 
-    /**
-     * Crée une réservation.
-     *
-     * @param idUtilisateur l'identifiant de l'utilisateur
-     * @param idBorne       l'identifiant de la borne
-     * @param debut         la date de début
-     * @param fin           la date de fin
-     * @return la réservation créée
-     */
     @Override
     public Reservation creerReservation(Long idUtilisateur, Long idBorne, LocalDateTime debut, LocalDateTime fin) {
-        Reservation r = new Reservation(
-                Long.valueOf(UUID.randomUUID().toString()),
-                idUtilisateur,
-                idBorne,
-                debut,
-                fin,
-                StatutReservation.EN_ATTENTE
-        );
+        Utilisateur utilisateur = utilisateurDao.readById(idUtilisateur);
+        if (utilisateur == null) return null;
+
+        // Recherche de la borne dans tous les lieux
+        BorneRecharge borneTrouvee = null;
+        for (LieuRecharge lieu : lieuDao.readAll()) {
+            for (BorneRecharge b : lieu.getBornes()) {
+                if (b.getId().equals(idBorne)) {
+                    borneTrouvee = b;
+                    break;
+                }
+            }
+            if (borneTrouvee != null) break;
+        }
+
+        if (borneTrouvee == null) return null;
+
+        Reservation r = new Reservation(debut, fin, StatutReservation.EN_ATTENTE, utilisateur, borneTrouvee);
         reservationDao.create(r);
         return r;
     }
 
-    /**
-     * Accepte une réservation.
-     *
-     * @param idReservation l'identifiant de la réservation
-     * @return true si la réservation a été acceptée, false sinon
-     */
     @Override
     public boolean accepterReservation(Long idReservation) {
         Reservation r = reservationDao.readById(idReservation);
@@ -113,18 +94,10 @@ public class ReservationServiceImpl implements ReservationService {
 
         r.setStatut(StatutReservation.ACCEPTEE);
         reservationDao.update(r);
-
-        documentService.genererRecuReservation(r); // génération du reçu
-
+        documentService.genererRecuReservation(r);
         return true;
     }
 
-    /**
-     * Refuser une réservation.
-     *
-     * @param idReservation l'identifiant de la réservation
-     * @return true si la réservation a été refusée, false sinon
-     */
     @Override
     public boolean refuserReservation(Long idReservation) {
         Reservation r = reservationDao.readById(idReservation);
@@ -135,25 +108,16 @@ public class ReservationServiceImpl implements ReservationService {
         return true;
     }
 
-    /**
-     * Récupère toutes les réservations d'un utilisateur.
-     *
-     * @param idUtilisateur L'identifiant de l'utilisateur
-     * @return La liste des réservations de l'utilisateur
-     */
     @Override
     public List<Reservation> getReservationsUtilisateur(Long idUtilisateur) {
-        List<Reservation> toutes = reservationDao.readAll();
-        return toutes.stream()
-                .filter(r -> idUtilisateur.equals(r.getIdUtilisateur()))
+        Utilisateur utilisateur = utilisateurDao.readById(idUtilisateur);
+        if (utilisateur == null) return List.of();
+
+        return reservationDao.readAll().stream()
+                .filter(r -> utilisateur.equals(r.getUtilisateur()))
                 .toList();
     }
 
-    /**
-     * Récupère toutes les réservations.
-     *
-     * @return La liste de toutes les réservations
-     */
     @Override
     public List<Reservation> getToutesReservations() {
         return reservationDao.readAll();
