@@ -1,0 +1,8 @@
+=== Reçu de réservation ===
+ID Réservation : 922887623
+ID Borne       : 1567310543
+Date début     : 2025-10-05 14:00
+Date fin       : 2025-10-06 16:00
+Durée (h)      : 26
+Tarif horaire  : 15.0 €/h
+Total estimé   : 390.0 €
