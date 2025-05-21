@@ -1,5 +1,6 @@
 package com.humanbooster.service;
 
+import com.humanbooster.dao.BorneRechargeDao;
 import com.humanbooster.dao.LieuRechargeDao;
 import com.humanbooster.dao.ReservationDao;
 import com.humanbooster.model.BorneRecharge;
@@ -13,6 +14,7 @@ import java.util.List;
 public class BorneServiceImpl implements BorneService {
 
     private final LieuRechargeDao lieuDao;
+    private final BorneRechargeDao borneDao;
     private final ReservationDao reservationDao;
 
     /**
@@ -21,8 +23,9 @@ public class BorneServiceImpl implements BorneService {
      * @param lieuRechargeDao        Le dao pour les lieux de recharge.
      * @param reservationDao  Le dao pour les réservations.
      */
-    public BorneServiceImpl(LieuRechargeDao lieuRechargeDao, ReservationDao reservationDao) {
+    public BorneServiceImpl(LieuRechargeDao lieuRechargeDao, BorneRechargeDao borneDao, ReservationDao reservationDao) {
         this.lieuDao = lieuRechargeDao;
+        this.borneDao = borneDao;
         this.reservationDao = reservationDao;
     }
 
@@ -35,15 +38,16 @@ public class BorneServiceImpl implements BorneService {
      */
     @Override
     public boolean ajouterBorne(Long idLieu, BorneRecharge borne) {
-        LieuRecharge lieu = lieuDao.readById(idLieu);
+        LieuRecharge lieu = lieuDao.readById(idLieu); // entité managed (session ouverte dans DAO)
         if (lieu == null) return false;
 
-        if (lieu.getBornes().stream().anyMatch(b -> b.getId().equals(borne.getId()))) {
-            return false; // borne déjà existante
-        }
-
+        // Ajout de la borne à la collection du lieu
+        borne.setLieuRecharge(lieu);
         lieu.ajouterBorne(borne);
-        lieuDao.create(lieu);
+
+        // Sauvegarde uniquement de la borne
+        borneDao.create(borne);
+
         return true;
     }
 
