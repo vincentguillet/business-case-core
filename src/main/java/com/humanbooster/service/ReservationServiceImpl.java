@@ -114,7 +114,7 @@ public class ReservationServiceImpl implements ReservationService {
         if (utilisateur == null) return List.of();
 
         return reservationDao.readAll().stream()
-                .filter(r -> utilisateur.equals(r.getUtilisateur()))
+                .filter(r -> r.getUtilisateur() != null && idUtilisateur.equals(r.getUtilisateur().getId()))
                 .toList();
     }
 
