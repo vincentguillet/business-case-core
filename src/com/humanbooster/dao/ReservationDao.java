@@ -28,7 +28,7 @@ public class ReservationDao extends GenericDaoImpl<Reservation, Long> {
         List<Reservation> reservations = readAll();
         List<Reservation> result = new ArrayList<>();
         for (Reservation r : reservations) {
-            if (r.getIdBorne().equals(idBorne)) {
+            if (r.getBorneRecharge().equals(idBorne)) {
                 result.add(r);
             }
         }

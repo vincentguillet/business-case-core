@@ -7,16 +7,16 @@ import org.hibernate.SessionFactory;
 import src.com.humanbooster.model.Utilisateur;
 
 /**
- * Classe UserDao
+ * Classe UtilisateurDao
  * Décrit la gestion des utilisateurs en mémoire via un fichier JSON.
  */
-public class UserDao extends GenericDaoImpl<Utilisateur, Long> {
+public class UtilisateurDao extends GenericDaoImpl<Utilisateur, Long> {
 
     /**
-     * Constructeur de la classe UserDao
+     * Constructeur de la classe UtilisateurDao
      * Charge les utilisateurs depuis le fichier JSON.
      */
-    public UserDao(SessionFactory sessionFactory) {
+    public UtilisateurDao(SessionFactory sessionFactory) {
         super(sessionFactory, Utilisateur.class);
     }
 
