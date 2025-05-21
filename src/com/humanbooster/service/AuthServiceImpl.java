@@ -1,6 +1,7 @@
 package src.com.humanbooster.service;
 
-import src.com.humanbooster.dao.UserDao;
+import src.com.humanbooster.dao.UtilisateurDao;
+import src.com.humanbooster.model.RoleUtilisateur;
 import src.com.humanbooster.model.Utilisateur;
 
 import java.util.UUID;
@@ -10,16 +11,16 @@ import java.util.UUID;
  */
 public class AuthServiceImpl implements AuthService {
 
-    private final UserDao userDao;
+    private final UtilisateurDao utilisateurDao;
     private Utilisateur utilisateurEnSession;
 
     /**
      * Constructeur de la classe AuthServiceImpl.
      *
-     * @param userDao Le dépôt d'utilisateurs.
+     * @param utilisateurDao Le dépôt d'utilisateurs.
      */
-    public AuthServiceImpl(UserDao userDao) {
-        this.userDao = userDao;
+    public AuthServiceImpl(UtilisateurDao utilisateurDao) {
+        this.utilisateurDao = utilisateurDao;
     }
 
     /**
@@ -31,14 +32,14 @@ public class AuthServiceImpl implements AuthService {
      */
     @Override
     public Utilisateur inscrire(String email, String motDePasse) {
-        if (userDao.existsByEmail(email)) {
+        if (utilisateurDao.existsByEmail(email)) {
             System.out.println("Un compte existe déjà avec cet e-mail.");
             return null;
         }
 
         String codeValidation = UUID.randomUUID().toString().substring(0, 6).toUpperCase();
-        Utilisateur u = new Utilisateur(Long.valueOf(UUID.randomUUID().toString()), email, motDePasse, codeValidation, false);
-        userDao.create(u);
+        Utilisateur u = new Utilisateur(email, motDePasse, codeValidation, false, RoleUtilisateur.UTILISATEUR);
+        utilisateurDao.create(u);
         System.out.println("Code de validation : " + codeValidation);
         return u;
     }
@@ -50,10 +51,10 @@ public class AuthServiceImpl implements AuthService {
      */
     @Override
     public boolean validerCompte(String email, String code) {
-        Utilisateur u = userDao.findByEmail(email);
+        Utilisateur u = utilisateurDao.findByEmail(email);
         if (u != null && u.getCodeValidation().equalsIgnoreCase(code)) {
-            u.setEstValide(true);
-            userDao.update(u);
+            u.setValide(true);
+            utilisateurDao.update(u);
             return true;
         }
         return false;
@@ -67,8 +68,8 @@ public class AuthServiceImpl implements AuthService {
      */
     @Override
     public Utilisateur connecter(String email, String motDePasse) {
-        Utilisateur u = userDao.findByEmail(email);
-        if (u != null && u.getMotDePasse().equals(motDePasse) && u.isEstValide()) {
+        Utilisateur u = utilisateurDao.findByEmail(email);
+        if (u != null && u.getMotDePasse().equals(motDePasse) && u.isValide()) {
             utilisateurEnSession = u;
             return u;
         }
@@ -108,7 +109,7 @@ public class AuthServiceImpl implements AuthService {
      */
     @Override
     public boolean estCompteValide(String email) {
-        Utilisateur u = userDao.findByEmail(email);
-        return u != null && u.isEstValide();
+        Utilisateur u = utilisateurDao.findByEmail(email);
+        return u != null && u.isValide();
     }
 }
