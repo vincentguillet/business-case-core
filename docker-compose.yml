@@ -25,6 +25,8 @@ services:
       DB_NAME: electricity-business
       DB_USER: user
       DB_PASSWORD: password
+    volumes:
+      - ./exports:/app/exports
 
 volumes:
   mysql_data:
