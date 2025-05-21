@@ -10,14 +10,14 @@ import com.humanbooster.model.Utilisateur;
 public class HibernateConfig {
 
     private static final SessionFactory sessionFactory;
-    public static final boolean LOCAL = false;
+    private static boolean localEnvironment;
     private static String url;
     private static String username;
     private static String password;
 
     static {
 
-        if (LOCAL) {
+        if (localEnvironment) {
             url = "jdbc:mysql://127.0.0.1:3306/electricity-business";
             username = "admin";
             password = "admin";
@@ -45,5 +45,13 @@ public class HibernateConfig {
 
     public static SessionFactory getSessionFactory() {
         return sessionFactory;
+    }
+
+    public static void setLocalEnvironment(boolean local) {
+        localEnvironment = local;
+    }
+
+    public static boolean isLocalEnvironment() {
+        return localEnvironment;
     }
 }
