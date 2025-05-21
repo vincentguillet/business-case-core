@@ -1,89 +1,101 @@
-# Electricity Business - Application Console Java
+# ⚡ Electricity Business – Application Console Java (Hibernate + Docker)
 
 ## Description
 
-Backend de l'application Electricity Business réalisé dans le cadre de ma formation CDA chez Human Booster.
+Application console réalisée dans le cadre de ma formation CDA chez Human Booster.  
+Elle simule un système de **réservation de bornes de recharge électrique**, avec gestion des utilisateurs, lieux, bornes, réservations et génération de reçus.
 
-Cette application console simule un service de réservation de bornes de recharge électrique avec gestion des comptes, lieux, bornes, et réservations; sans bibliothèques tierces, avec persistance sur fichiers JSON.
-
----
-
-## Fonctionnalités obligatoires implémentées
-
-### Comptes
-
-*  Inscription d'un nouvel utilisateur avec génération automatique d'un code de validation affiché en console (simulation d'e-mail).
-*  Validation du compte à l’aide du code fourni.
-*  Connexion / déconnexion d’un utilisateur validé.
-
-### Bornes & lieux
-
-*  Ajout et modification d’un lieu (nom + adresse).
-*  Ajout et modification d’une borne (tarif horaire) rattachée à un lieu.
-*  Suppression d’une borne possible uniquement si **aucune réservation future** n’est liée à celle-ci.
-
-### Réservations
-
-*  Recherche interactive des bornes disponibles sur un créneau horaire (format `yyyy-MM-dd HH:mm`).
-*  Création d’une réservation (statut initial `EN_ATTENTE`).
-*  Traitement des réservations (acceptation / refus) via un menu dédié à l’opérateur.
-
-### Documents
-
-*  Génération automatique d’un **reçu au format `.txt`** lors de l’acceptation d’une réservation (stocké dans `exports/`).
-
-### IHM console
-
-*  Menu principal clair avec navigation structurée.
-*  Validation des entrées utilisateurs avec relances si besoin.
-*  Sélection interactive par **index** pour les lieux, bornes et réservations (plus ergonomique que la saisie d’ID).
+La version actuelle repose sur :
+- Java 21
+- Hibernate 6 (ORM JPA)
+- MySQL 8 (via Docker)
+- Maven (build & packaging)
+- Exécution conteneurisée avec Docker Compose
 
 ---
 
-## Bonus implémentés
+## Fonctionnalités
 
-*  Persistance via fichiers JSON (sans bibliothèque tierce).
-*  Chargement automatique des données existantes à l’ouverture.
-*  Blocage de suppression des bornes avec réservations futures.
-*  Formatage ISO propre des dates pour fiabilité (lecture/écriture).
+### ✅ Gestion des comptes utilisateurs
+- Inscription avec génération de code de validation affiché en console (simulation email)
+- Validation du compte via code
+- Connexion / déconnexion
+
+### ✅ Gestion des lieux & bornes
+- Ajout / modification / suppression de lieux
+- Ajout / modification / suppression de bornes dans un lieu
+- Suppression conditionnelle : une borne ne peut être supprimée si une réservation future existe
+
+### ✅ Réservations
+- Recherche interactive des bornes disponibles sur un créneau donné
+- Création de réservations avec statut initial `EN_ATTENTE`
+- Traitement des réservations (`ACCEPTEE`, `REFUSEE`) via un menu administrateur
+
+### ✅ Génération de documents
+- Génération automatique d’un reçu `.txt` dans `exports/` après acceptation d’une réservation
 
 ---
 
-## Structure du projet
+## ⚙️ Architecture technique
 
-> Le projet suit une structure inspirée du modèle MVC (Model / View / Controller), en s’écartant volontairement de la structure demandée dans l’énoncé.
->
-> Cela permet une meilleure séparation des responsabilités, conforme aux standards du développement logiciel réel :
->
-> * `controller/` : logique de gestion des entrées utilisateurs (UI textuelle)
-> * `service/` : logique métier + interfaces
-> * `repository/` : gestion des accès aux fichiers JSON simulant la persistance
-> * `model/` : entités et énumérations du domaine
+- **Hibernate 6** avec JPA Annotations (`@Entity`, `@OneToMany`, etc.)
+- **MySQL** comme base relationnelle (via Docker)
+- **DAO Hibernate** personnalisés pour chaque entité
+- **Aucune bibliothèque externe** (hors dépendances Hibernate & JDBC)
+- Structure modulaire MVC (Controller / Service / DAO / Model)
+
+---
+
+## 📁 Structure du code
 
 ```
 src/
-├── com.humanbooster
-    ├── model/         -> Entités : Utilisateur, LieuRecharge, BorneRecharge, Reservation, enums
-    ├── controller/     -> Contrôleurs pour les menus
-    ├── service/        -> Services (logique métier) + interfaces demandées
-    ├── repository/     -> Repositories simulés avec fichiers JSON
-    └── ui/             -> Menu principal + Main
+└── main/
+    └── java/
+        └── com.humanbooster
+            ├── model/         → Entités JPA : Utilisateur, LieuRecharge, BorneRecharge, Reservation
+            ├── dao/           → DAO Hibernate génériques et spécifiques
+            ├── service/       → Logique métier
+            ├── controller/    → Gestion console des actions utilisateurs
+            ├── ui/            → Main + Menu interactif
+            └── config/        → Configuration Hibernate
 ```
 
 ---
 
-## Fichiers générés / requis
+## ▶️ Lancement du programme
 
-* `data/utilisateurs.json`
-* `data/lieux.json`
-* `data/reservations.json`
-* `exports/recu_<id>.txt` (lors d'une réservation acceptée)
+### **Pré-requis** :
+- Docker + Docker Compose installés et fonctionnels
+
+### **Commandes** :
+
+```bash
+docker compose run -it --build app
+```
+
+> Cela :
+> - Build le projet Java via Maven
+> - Lance MySQL (port 3366) avec schéma `electricity-business`
+> - Démarre l’application console une fois la BDD prête
 
 ---
 
-## Informations importantes
+## 📦 Structure des fichiers
 
-* Le système est entièrement en mémoire + fichiers JSON (pas de BDD)
-* Aucune dépendance externe
-* Les identifiants (lieux, bornes, utilisateurs, réservations) sont générés via `UUID`
-* Le code respecte l'architecture MVC : Controller / Service / Repository / Model
+| Fichier                  | Rôle |
+|--------------------------|------|
+| `pom.xml`                | Configuration Maven (Java 21, Hibernate 6, MySQL connector) |
+| `Dockerfile`             | Image Java + Build Maven |
+| `docker-compose.yml`     | Stack app + BDD MySQL |
+| `wait-for-it.sh`         | Script pour attendre la disponibilité de MySQL |
+| `exports/`               | Répertoire des reçus générés |
+
+---
+
+## 💡 Notes techniques
+
+- Identifiants générés par la base via `@GeneratedValue(strategy = GenerationType.IDENTITY)`
+- Relations correctement modélisées (`@ManyToOne`, `@OneToMany`)
+- Les entités sont persistées automatiquement grâce à `hibernate.hbm2ddl.auto=update`
+- La configuration Hibernate est dynamique via `HibernateConfig.java` et les variables d’environnement
