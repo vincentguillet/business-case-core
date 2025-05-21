@@ -1,3 +1,4 @@
+name: business-case-core
 services:
   mysql:
     image: mysql:8.3
