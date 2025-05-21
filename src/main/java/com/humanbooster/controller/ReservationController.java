@@ -31,8 +31,8 @@ public class ReservationController {
     public void rechercherEtReserver(Long idUtilisateur) {
         System.out.println("=== Rechercher une borne disponible ===");
 
-        LocalDateTime debut = saisirDateHeure("Date et heure de début (ex: 2025-05-05 14:00) : ");
-        LocalDateTime fin = saisirDateHeure("Date et heure de fin   (ex: 2025-05-05 16:00) : ");
+        LocalDateTime debut = saisirDateHeure("Date et heure de début (ex: 05/10/2025 14:00) : ");
+        LocalDateTime fin = saisirDateHeure("Date et heure de fin   (ex: 06/10/2025 16:00) : ");
 
         if (fin.isBefore(debut)) {
             System.out.println("Créneau invalide : la date de fin est antérieure à celle de début.");
@@ -49,7 +49,7 @@ public class ReservationController {
         System.out.println("Bornes disponibles :");
         for (int i = 0; i < disponibles.size(); i++) {
             Reservation r = disponibles.get(i);
-            System.out.println((i + 1) + ". Borne ID : " + r.getBorneRecharge());
+            System.out.println((i + 1) + ". Borne ID : " + r.getBorneRecharge().getId());
         }
 
         System.out.print("Sélectionner une borne (numéro) ou 0 pour annuler : ");
