@@ -31,7 +31,7 @@ public class LieuServiceImpl implements LieuService {
      */
     @Override
     public LieuRecharge ajouterLieu(String nom, String adresse) {
-        LieuRecharge lieu = new LieuRecharge(Long.valueOf(UUID.randomUUID().toString()), nom, adresse);
+        LieuRecharge lieu = new LieuRecharge(nom, adresse, null);
         lieuDao.create(lieu);
         return lieu;
     }
