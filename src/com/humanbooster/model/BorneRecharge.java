@@ -6,7 +6,7 @@ package src.com.humanbooster.model;
  */
 public class BorneRecharge {
 
-    private String id;
+    private Long id;
     private EtatBorne etat;
     private double tarifHoraire;
 
@@ -17,7 +17,7 @@ public class BorneRecharge {
      * @param etat       État de la borne de recharge (DISPONIBLE, OCCUPEE, EN_PANNE)
      * @param tarifHoraire Tarif horaire de la borne de recharge (en centimes)
      */
-    public BorneRecharge(String id, EtatBorne etat, double tarifHoraire) {
+    public BorneRecharge(Long id, EtatBorne etat, double tarifHoraire) {
         this.id = id;
         this.etat = etat;
         this.tarifHoraire = tarifHoraire;
@@ -27,7 +27,7 @@ public class BorneRecharge {
      * Récupère l'identifiant unique de la borne de recharge
      * @return L'identifiant unique de la borne de recharge
      */
-    public String getId() {
+    public Long getId() {
         return id;
     }
 
@@ -35,7 +35,7 @@ public class BorneRecharge {
      * Définit l'identifiant unique de la borne de recharge
      * @param id L'identifiant unique de la borne de recharge
      */
-    public void setId(String id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

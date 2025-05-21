@@ -9,7 +9,7 @@ import java.util.List;
  */
 public class LieuRecharge {
 
-    private String id;
+    private Long id;
     private String nom;
     private String adresse;
     private List<BorneRecharge> bornes;
@@ -20,7 +20,7 @@ public class LieuRecharge {
      * @param id     Identifiant unique du lieu de recharge
      * @param nom    Nom du lieu de recharge
      */
-    public LieuRecharge(String id, String nom, String adresse) {
+    public LieuRecharge(Long id, String nom, String adresse) {
         this.id = id;
         this.nom = nom;
         this.adresse = adresse;
@@ -32,7 +32,7 @@ public class LieuRecharge {
      *
      * @return L'identifiant unique du lieu de recharge
      */
-    public String getId() {
+    public Long getId() {
         return id;
     }
 
@@ -41,7 +41,7 @@ public class LieuRecharge {
      *
      * @param id L'identifiant unique du lieu de recharge
      */
-    public void setId(String id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

@@ -6,7 +6,7 @@ package src.com.humanbooster.model;
  */
 public class Utilisateur {
 
-    private String id;
+    private Long id;
     private String email;
     private String motDePasse;
     private String codeValidation;
@@ -21,7 +21,7 @@ public class Utilisateur {
      * @param codeValidation Code de validation de l'utilisateur
      * @param estValide     Indique si l'utilisateur est valide ou non
      */
-    public Utilisateur(String id, String email, String motDePasse, String codeValidation, boolean estValide) {
+    public Utilisateur(Long id, String email, String motDePasse, String codeValidation, boolean estValide) {
         this.id = id;
         this.email = email;
         this.motDePasse = motDePasse;
@@ -33,7 +33,7 @@ public class Utilisateur {
      * Récupère l'identifiant unique de l'utilisateur
      * @return L'identifiant unique de l'utilisateur
      */
-    public String getId() {
+    public Long getId() {
         return id;
     }
 
@@ -41,7 +41,7 @@ public class Utilisateur {
      * Définit l'identifiant unique de l'utilisateur
      * @param id L'identifiant unique de l'utilisateur
      */
-    public void setId(String id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

@@ -10,9 +10,9 @@ import java.time.LocalDateTime;
  */
 public class Reservation {
 
-    private String id;
-    private String idUtilisateur;
-    private String idBorne;
+    private Long id;
+    private Long idUtilisateur;
+    private Long idBorne;
     private LocalDateTime dateDebut;
     private LocalDateTime dateFin;
     private StatutReservation statut;
@@ -27,7 +27,7 @@ public class Reservation {
      * @param dateFin       Date et heure de fin de la réservation
      * @param statut        Statut de la réservation
      */
-    public Reservation(String id, String idUtilisateur, String idBorne, LocalDateTime dateDebut, LocalDateTime dateFin, StatutReservation statut) {
+    public Reservation(Long id, Long idUtilisateur, Long idBorne, LocalDateTime dateDebut, LocalDateTime dateFin, StatutReservation statut) {
         this.id = id;
         this.idUtilisateur = idUtilisateur;
         this.idBorne = idBorne;
@@ -41,7 +41,7 @@ public class Reservation {
      *
      * @return L'identifiant unique de la réservation
      */
-    public String getId() {
+    public Long getId() {
         return id;
     }
 
@@ -50,7 +50,7 @@ public class Reservation {
      *
      * @param id L'identifiant unique de la réservation
      */
-    public void setId(String id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -59,7 +59,7 @@ public class Reservation {
      *
      * @return L'idUtilisateur ayant effectué la réservation
      */
-    public String getIdUtilisateur() {
+    public Long getIdUtilisateur() {
         return idUtilisateur;
     }
 
@@ -68,7 +68,7 @@ public class Reservation {
      *
      * @param idUtilisateur L'id de l'utilisateur ayant effectué la réservation
      */
-    public void setIdUtilisateur(String idUtilisateur) {
+    public void setIdUtilisateur(Long idUtilisateur) {
         this.idUtilisateur = idUtilisateur;
     }
 
@@ -77,7 +77,7 @@ public class Reservation {
      *
      * @return L'id de la borne de recharge réservée
      */
-    public String getIdBorne() {
+    public Long getIdBorne() {
         return idBorne;
     }
 
@@ -86,7 +86,7 @@ public class Reservation {
      *
      * @param idBorne L'id de la borne de recharge réservée
      */
-    public void setIdBorne(String idBorne) {
+    public void setIdBorne(Long idBorne) {
         this.idBorne = idBorne;
     }
 
