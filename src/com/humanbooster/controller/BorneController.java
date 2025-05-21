@@ -7,10 +7,8 @@ import src.com.humanbooster.service.BorneService;
 
 import java.util.List;
 import java.util.Scanner;
-import java.util.UUID;
 
 /**
- * Classe BorneController
  * Contrôleur pour gérer les bornes de recharge.
  */
 public class BorneController {
@@ -22,9 +20,9 @@ public class BorneController {
     /**
      * Constructeur de la classe BorneController.
      *
-     * @param borneService   Service de gestion des bornes
-     * @param lieuController Contrôleur pour gérer les lieux
-     * @param scanner        Scanner pour la saisie utilisateur
+     * @param borneService   Service de gestion des bornes.
+     * @param lieuController Contrôleur de gestion des lieux.
+     * @param scanner        Scanner pour la saisie utilisateur.
      */
     public BorneController(BorneService borneService, LieuController lieuController, Scanner scanner) {
         this.borneService = borneService;
@@ -33,105 +31,105 @@ public class BorneController {
     }
 
     /**
-     * Ajouter une borne de recharge.
+     * Affiche le menu de gestion des bornes.
      */
     private void ajouterBorne() {
         LieuRecharge lieu = lieuController.selectionnerLieu();
         if (lieu == null) return;
-        ajouterBorne(lieu.getId());
+        ajouterBorne(lieu);
     }
 
     /**
-     * Ajouter une borne de recharge à un lieu spécifique.
+     * Ajoute une borne de recharge à un lieu donné.
      *
-     * @param idLieu ID du lieu
+     * @param lieu Lieu où ajouter la borne.
      */
-    public void ajouterBorne(Long idLieu) {
+    public void ajouterBorne(LieuRecharge lieu) {
         System.out.println("=== Ajouter une borne ===");
 
         System.out.print("Tarif horaire : ");
         double tarif = Double.parseDouble(scanner.nextLine());
 
-        BorneRecharge borne = new BorneRecharge(
-                Long.valueOf(UUID.randomUUID().toString()),
-                EtatBorne.DISPONIBLE,
-                tarif
-        );
+        BorneRecharge borne = new BorneRecharge(EtatBorne.DISPONIBLE, tarif, lieu);
 
-        boolean ok = borneService.ajouterBorne(idLieu, borne);
-        System.out.println(ok ? "Borne ajoutée avec l'ID : " + borne.getId()
-                : "Échec : la borne n'a pas pu être ajoutée.");
+        boolean ok = borneService.ajouterBorne(lieu.getId(), borne);
+        System.out.println(ok ? "Borne ajoutée avec succès." : "Échec : la borne n'a pas pu être ajoutée.");
     }
 
     /**
-     * Modifier une borne de recharge.
+     * Modifie une borne de recharge d'un lieu donné.
+     *
      */
     private void modifierBorne() {
         LieuRecharge lieu = lieuController.selectionnerLieu();
         if (lieu == null) return;
-        modifierBorne(lieu.getId());
+        modifierBorne(lieu);
     }
 
     /**
-     * Modifier une borne de recharge sur un lieu spécifique.
+     * Modifie une borne de recharge d'un lieu donné.
      *
-     * @param idLieu ID du lieu
+     * @param lieu Lieu où se trouve la borne à modifier.
      */
-    public void modifierBorne(Long idLieu) {
-        BorneRecharge borne = selectionnerBorne(idLieu);
+    public void modifierBorne(LieuRecharge lieu) {
+        BorneRecharge borne = selectionnerBorne(lieu);
         if (borne == null) return;
 
         System.out.print("Nouveau tarif horaire (" + borne.getTarifHoraire() + ") : ");
         String tarifStr = scanner.nextLine();
         double nouveauTarif = tarifStr.isBlank() ? borne.getTarifHoraire() : Double.parseDouble(tarifStr);
 
-        BorneRecharge modifiee = new BorneRecharge(borne.getId(), borne.getEtat(), nouveauTarif);
-        boolean ok = borneService.modifierBorne(idLieu, modifiee);
+        borne.setTarifHoraire(nouveauTarif);
 
+        boolean ok = borneService.modifierBorne(lieu.getId(), borne);
         System.out.println(ok ? "Borne modifiée." : "Échec de la modification.");
     }
 
     /**
-     * Supprimer une borne de recharge.
+     * Supprime une borne de recharge d'un lieu donné.
+     *
      */
     private void supprimerBorne() {
         LieuRecharge lieu = lieuController.selectionnerLieu();
         if (lieu == null) return;
-        supprimerBorne(lieu.getId());
+        supprimerBorne(lieu);
     }
 
     /**
-     * Supprimer une borne de recharge su
-     * @param idLieu L'id du lieu
+     * Supprime une borne de recharge d'un lieu donné.
+     *
+     * @param lieu Lieu où se trouve la borne à supprimer.
      */
-    public void supprimerBorne(Long idLieu) {
-        BorneRecharge borne = selectionnerBorne(idLieu);
+    public void supprimerBorne(LieuRecharge lieu) {
+        BorneRecharge borne = selectionnerBorne(lieu);
         if (borne == null) return;
 
-        boolean ok = borneService.supprimerBorne(idLieu, borne.getId());
+        boolean ok = borneService.supprimerBorne(lieu.getId(), borne.getId());
         System.out.println(ok ? "Borne supprimée." : "Échec de la suppression.");
     }
 
     /**
-     * Lister les bornes de recharge
+     * Liste les bornes de recharge d'un lieu donné.
+     *
      */
     private void listerBornes() {
         LieuRecharge lieu = lieuController.selectionnerLieu();
         if (lieu == null) return;
-        listerBornes(lieu.getId());
+        listerBornes(lieu);
     }
 
     /**
-     * Lister les bornes de recharge d'un lieu spécifique.
+     * Liste les bornes de recharge d'un lieu donné.
      *
-     * @param idLieu ID du lieu
+     * @param lieu Lieu dont on veut lister les bornes.
      */
-    public void listerBornes(Long idLieu) {
-        List<BorneRecharge> bornes = borneService.listerBornesParLieu(idLieu);
+    public void listerBornes(LieuRecharge lieu) {
+        List<BorneRecharge> bornes = borneService.listerBornesParLieu(lieu.getId());
         if (bornes.isEmpty()) {
             System.out.println("Aucune borne pour ce lieu.");
             return;
         }
+
         System.out.println("=== Bornes du lieu ===");
         for (int i = 0; i < bornes.size(); i++) {
             BorneRecharge b = bornes.get(i);
@@ -140,13 +138,13 @@ public class BorneController {
     }
 
     /**
-     * Sélectionner une borne de recharge.
+     * Sélectionne une borne de recharge d'un lieu donné.
      *
-     * @param idLieu ID du lieu
-     * @return BorneRecharge sélectionnée ou null si aucune sélection
+     * @param lieu Lieu dont on veut sélectionner une borne.
+     * @return La borne sélectionnée ou null si aucune sélectionnée.
      */
-    public BorneRecharge selectionnerBorne(Long idLieu) {
-        List<BorneRecharge> bornes = borneService.listerBornesParLieu(idLieu);
+    public BorneRecharge selectionnerBorne(LieuRecharge lieu) {
+        List<BorneRecharge> bornes = borneService.listerBornesParLieu(lieu.getId());
         if (bornes.isEmpty()) {
             System.out.println("Aucune borne pour ce lieu.");
             return null;
@@ -155,7 +153,7 @@ public class BorneController {
         System.out.println("=== Bornes du lieu ===");
         for (int i = 0; i < bornes.size(); i++) {
             BorneRecharge b = bornes.get(i);
-            System.out.println((i + 1) + ". " + b.getEtat() + " - " + b.getTarifHoraire() + "€/h");
+            System.out.println((i + 1) + ". " + b.getEtat() + " - " + b.getTarifHoraire() + " €/h");
         }
 
         System.out.print("Sélectionner une borne (numéro) ou 0 pour annuler : ");
