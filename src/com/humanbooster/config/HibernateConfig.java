@@ -2,6 +2,10 @@ package src.com.humanbooster.config;
 
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
+import src.com.humanbooster.model.BorneRecharge;
+import src.com.humanbooster.model.LieuRecharge;
+import src.com.humanbooster.model.Reservation;
+import src.com.humanbooster.model.Utilisateur;
 
 public class HibernateConfig {
 
@@ -10,7 +14,6 @@ public class HibernateConfig {
     private static String url;
     private static String username;
     private static String password;
-
 
     static {
 
@@ -31,7 +34,11 @@ public class HibernateConfig {
                 .setProperty("hibernate.connection.driver_class", "com.mysql.cj.jdbc.Driver")
                 .setProperty("hibernate.hbm2ddl.auto", "update")
                 .setProperty("hibernate.show_sql", "false")
-                .setProperty("hibernate.format_sql", "true");
+                .setProperty("hibernate.format_sql", "true")
+                .addAnnotatedClass(Utilisateur.class)
+                .addAnnotatedClass(LieuRecharge.class)
+                .addAnnotatedClass(BorneRecharge.class)
+                .addAnnotatedClass(Reservation.class);
 
         sessionFactory = config.buildSessionFactory();
     }
