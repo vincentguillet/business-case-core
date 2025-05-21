@@ -37,8 +37,8 @@ public class AuthServiceImpl implements AuthService {
         }
 
         String codeValidation = UUID.randomUUID().toString().substring(0, 6).toUpperCase();
-        Utilisateur u = new Utilisateur(UUID.randomUUID().toString(), email, motDePasse, codeValidation, false);
-        userDao.save(u);
+        Utilisateur u = new Utilisateur(Long.valueOf(UUID.randomUUID().toString()), email, motDePasse, codeValidation, false);
+        userDao.create(u);
         System.out.println("Code de validation : " + codeValidation);
         return u;
     }
@@ -53,7 +53,7 @@ public class AuthServiceImpl implements AuthService {
         Utilisateur u = userDao.findByEmail(email);
         if (u != null && u.getCodeValidation().equalsIgnoreCase(code)) {
             u.setEstValide(true);
-            userDao.save(u);
+            userDao.update(u);
             return true;
         }
         return false;
