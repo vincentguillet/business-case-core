@@ -10,7 +10,7 @@ import com.humanbooster.model.Utilisateur;
 public class HibernateConfig {
 
     private static final SessionFactory sessionFactory;
-    public static final boolean LOCAL = true;
+    public static final boolean LOCAL = false;
     private static String url;
     private static String username;
     private static String password;
@@ -22,7 +22,7 @@ public class HibernateConfig {
             username = "admin";
             password = "admin";
         } else {
-            url = "jdbc:mysql://mysql:3306/electricity-business?useSSL=false&amp;allowPublicKeyRetrieval=true";
+            url = "jdbc:mysql://mysql:3306/electricity-business?useSSL=false&allowPublicKeyRetrieval=true";
             username = "root";
             password = "root";
         }
