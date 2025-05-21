@@ -1,5 +1,6 @@
 package com.humanbooster.ui;
 
+import com.humanbooster.dao.BorneRechargeDao;
 import org.hibernate.SessionFactory;
 import com.humanbooster.config.HibernateConfig;
 import com.humanbooster.controller.AuthController;
@@ -41,12 +42,13 @@ public class Main {
             // Dao
             UtilisateurDao utilisateurDao = new UtilisateurDao(sessionFactory);
             LieuRechargeDao lieuRechargeDao = new LieuRechargeDao(sessionFactory);
+            BorneRechargeDao borneRechargeDao = new BorneRechargeDao(sessionFactory);
             ReservationDao reservationDao = new ReservationDao(sessionFactory);
 
             // Service
             AuthService authService = new AuthServiceImpl(utilisateurDao);
             LieuService lieuService = new LieuServiceImpl(lieuRechargeDao);
-            BorneService borneService = new BorneServiceImpl(lieuRechargeDao, reservationDao);
+            BorneService borneService = new BorneServiceImpl(lieuRechargeDao, borneRechargeDao, reservationDao);
             DocumentService documentService = new DocumentServiceImpl(lieuRechargeDao);
             ReservationService reservationService = new ReservationServiceImpl(reservationDao, lieuRechargeDao, utilisateurDao, documentService);
 
