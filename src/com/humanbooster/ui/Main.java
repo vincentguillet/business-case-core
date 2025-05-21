@@ -1,5 +1,7 @@
 package src.com.humanbooster.ui;
 
+import org.hibernate.SessionFactory;
+import src.com.humanbooster.config.HibernateConfig;
 import src.com.humanbooster.controller.AuthController;
 import src.com.humanbooster.controller.BorneController;
 import src.com.humanbooster.controller.LieuController;
@@ -15,19 +17,25 @@ public class Main {
 
     public static void main(String[] args) {
 
+        System.out.println("Démarrage de l'application");
+
+        SessionFactory sessionFactory;
+
+        if (HibernateConfig.LOCAL) sessionFactory = HibernateConfig.getSessionFactory();
+
         Scanner scanner = new Scanner(System.in);
 
         // Dao
-        UserDao userRepo = new UserDao();
-        LieuDao lieuRepo = new LieuDao();
-        ReservationDao reservationRepo = new ReservationDao();
+        UserDao userDao = new UserDao();
+        LieuDao lieuDao = new LieuDao();
+        ReservationDao reservationDao = new ReservationDao();
 
         // Service
-        AuthService authService = new AuthServiceImpl(userRepo);
-        LieuService lieuService = new LieuServiceImpl(lieuRepo);
-        BorneService borneService = new BorneServiceImpl(lieuRepo, reservationRepo);
-        DocumentService documentService = new DocumentServiceImpl(lieuRepo);
-        ReservationService reservationService = new ReservationServiceImpl(reservationRepo, lieuRepo, documentService);
+        AuthService authService = new AuthServiceImpl(userDao);
+        LieuService lieuService = new LieuServiceImpl(lieuDao);
+        BorneService borneService = new BorneServiceImpl(lieuDao, reservationDao);
+        DocumentService documentService = new DocumentServiceImpl(lieuDao);
+        ReservationService reservationService = new ReservationServiceImpl(reservationDao, lieuDao, documentService);
 
         // Controller
         AuthController authController = new AuthController(authService, scanner);
