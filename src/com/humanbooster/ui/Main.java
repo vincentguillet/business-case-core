@@ -19,16 +19,14 @@ public class Main {
 
         System.out.println("Démarrage de l'application");
 
-        SessionFactory sessionFactory;
-
-        if (HibernateConfig.LOCAL) sessionFactory = HibernateConfig.getSessionFactory();
+        SessionFactory sessionFactory = HibernateConfig.getSessionFactory();
 
         Scanner scanner = new Scanner(System.in);
 
         // Dao
-        UserDao userDao = new UserDao();
-        LieuRechargeDao lieuRechargeDao = new LieuRechargeDao();
-        ReservationDao reservationDao = new ReservationDao();
+        UserDao userDao = new UserDao(sessionFactory);
+        LieuRechargeDao lieuRechargeDao = new LieuRechargeDao(sessionFactory);
+        ReservationDao reservationDao = new ReservationDao(sessionFactory);
 
         // Service
         AuthService authService = new AuthServiceImpl(userDao);
