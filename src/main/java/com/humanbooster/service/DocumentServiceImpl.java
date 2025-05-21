@@ -54,7 +54,7 @@ public class DocumentServiceImpl implements DocumentService {
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(recu))) {
             writer.write("=== Reçu de réservation ===\n");
-            writer.write("ID Réservation : " + r.getId().hashCode() + "\n");
+            writer.write("ID Réservation : " + r.hashCode() + "\n");
             writer.write("ID Borne       : " + r.getBorneRecharge().hashCode() + "\n");
             writer.write("Date début     : " + r.getDateDebut().format(FORMATTER) + "\n");
             writer.write("Date fin       : " + r.getDateFin().format(FORMATTER) + "\n");

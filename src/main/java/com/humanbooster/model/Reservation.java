@@ -153,9 +153,9 @@ public class Reservation {
     public String toString() {
         StringBuilder sb = new StringBuilder();
 
-        sb.append("Réservation ID : ").append(id).append("\n");
-        sb.append("Utilisateur ID : ").append(utilisateur.getId()).append("\n");
-        sb.append("Borne ID : ").append(borneRecharge.getId()).append("\n");
+        sb.append("Réservation ID : ").append(this.hashCode()).append("\n");
+        sb.append("Utilisateur ID : ").append(utilisateur.hashCode()).append("\n");
+        sb.append("Borne ID : ").append(borneRecharge.hashCode()).append("\n");
         sb.append("Date de début : ").append(dateDebut.format(TimeUtil.FORMATTER)).append("\n");
         sb.append("Date de fin : ").append(dateFin.format(TimeUtil.FORMATTER)).append("\n");
         sb.append("Statut : ").append(statut).append("\n");

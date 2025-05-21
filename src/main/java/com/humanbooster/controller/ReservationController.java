@@ -62,7 +62,7 @@ public class ReservationController {
 
         Long idBorne = disponibles.get(choix - 1).getBorneRecharge().getId();
         Reservation r = reservationService.creerReservation(idUtilisateur, idBorne, debut, fin);
-        System.out.println("Réservation créée avec statut EN_ATTENTE. ID : " + r.getId());
+        System.out.println("Réservation créée avec statut EN_ATTENTE. ID : " + r.hashCode());
     }
 
     /**
