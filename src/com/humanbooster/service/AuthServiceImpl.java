@@ -1,7 +1,7 @@
 package src.com.humanbooster.service;
 
+import src.com.humanbooster.dao.UserDao;
 import src.com.humanbooster.model.Utilisateur;
-import src.com.humanbooster.repository.UserRepository;
 
 import java.util.UUID;
 
@@ -10,16 +10,16 @@ import java.util.UUID;
  */
 public class AuthServiceImpl implements AuthService {
 
-    private final UserRepository userRepository;
+    private final UserDao userDao;
     private Utilisateur utilisateurEnSession;
 
     /**
      * Constructeur de la classe AuthServiceImpl.
      *
-     * @param userRepository Le dépôt d'utilisateurs.
+     * @param userDao Le dépôt d'utilisateurs.
      */
-    public AuthServiceImpl(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public AuthServiceImpl(UserDao userDao) {
+        this.userDao = userDao;
     }
 
     /**
@@ -31,14 +31,14 @@ public class AuthServiceImpl implements AuthService {
      */
     @Override
     public Utilisateur inscrire(String email, String motDePasse) {
-        if (userRepository.existsByEmail(email)) {
+        if (userDao.existsByEmail(email)) {
             System.out.println("Un compte existe déjà avec cet e-mail.");
             return null;
         }
 
         String codeValidation = UUID.randomUUID().toString().substring(0, 6).toUpperCase();
         Utilisateur u = new Utilisateur(UUID.randomUUID().toString(), email, motDePasse, codeValidation, false);
-        userRepository.save(u);
+        userDao.save(u);
         System.out.println("Code de validation : " + codeValidation);
         return u;
     }
@@ -50,10 +50,10 @@ public class AuthServiceImpl implements AuthService {
      */
     @Override
     public boolean validerCompte(String email, String code) {
-        Utilisateur u = userRepository.findByEmail(email);
+        Utilisateur u = userDao.findByEmail(email);
         if (u != null && u.getCodeValidation().equalsIgnoreCase(code)) {
             u.setEstValide(true);
-            userRepository.save(u);
+            userDao.save(u);
             return true;
         }
         return false;
@@ -67,7 +67,7 @@ public class AuthServiceImpl implements AuthService {
      */
     @Override
     public Utilisateur connecter(String email, String motDePasse) {
-        Utilisateur u = userRepository.findByEmail(email);
+        Utilisateur u = userDao.findByEmail(email);
         if (u != null && u.getMotDePasse().equals(motDePasse) && u.isEstValide()) {
             utilisateurEnSession = u;
             return u;
@@ -108,7 +108,7 @@ public class AuthServiceImpl implements AuthService {
      */
     @Override
     public boolean estCompteValide(String email) {
-        Utilisateur u = userRepository.findByEmail(email);
+        Utilisateur u = userDao.findByEmail(email);
         return u != null && u.isEstValide();
     }
 }

@@ -1,4 +1,4 @@
-package src.com.humanbooster.repository;
+package src.com.humanbooster.dao;
 
 import src.com.humanbooster.model.BorneRecharge;
 import src.com.humanbooster.model.EtatBorne;
@@ -9,19 +9,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Classe LieuRepository
+ * Classe LieuDao
  * Permet de lire, écrire, trouver et supprimer des lieux dans un fichier JSON.
  */
-public class LieuRepository {
+public class LieuDao {
 
     private static final String FILE_PATH = "data/lieux.json";
     private final List<LieuRecharge> lieux;
 
     /**
-     * Constructeur de la classe LieuRepository.
+     * Constructeur de la classe LieuDao.
      * Initialise la liste des lieux en lisant le fichier JSON.
      */
-    public LieuRepository() {
+    public LieuDao() {
         this.lieux = readLieux();
     }
 

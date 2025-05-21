@@ -1,7 +1,7 @@
 package src.com.humanbooster.service;
 
 import src.com.humanbooster.model.LieuRecharge;
-import src.com.humanbooster.repository.LieuRepository;
+import src.com.humanbooster.dao.LieuDao;
 
 import java.util.List;
 import java.util.UUID;
@@ -11,15 +11,15 @@ import java.util.UUID;
  */
 public class LieuServiceImpl implements LieuService {
 
-    private final LieuRepository lieuRepository;
+    private final LieuDao lieuDao;
 
     /**
      * Constructeur de la classe LieuServiceImpl.
      *
-     * @param lieuRepository Le dépôt de lieux de recharge.
+     * @param lieuDao Le dépôt de lieux de recharge.
      */
-    public LieuServiceImpl(LieuRepository lieuRepository) {
-        this.lieuRepository = lieuRepository;
+    public LieuServiceImpl(LieuDao lieuDao) {
+        this.lieuDao = lieuDao;
     }
 
     /**
@@ -32,7 +32,7 @@ public class LieuServiceImpl implements LieuService {
     @Override
     public LieuRecharge ajouterLieu(String nom, String adresse) {
         LieuRecharge lieu = new LieuRecharge(UUID.randomUUID().toString(), nom, adresse);
-        lieuRepository.save(lieu);
+        lieuDao.save(lieu);
         return lieu;
     }
 
@@ -46,12 +46,12 @@ public class LieuServiceImpl implements LieuService {
      */
     @Override
     public boolean modifierLieu(String id, String nouveauNom, String nouvelleAdresse) {
-        LieuRecharge lieu = lieuRepository.findById(id);
+        LieuRecharge lieu = lieuDao.findById(id);
         if (lieu == null) return false;
 
         lieu.setNom(nouveauNom);
         lieu.setAdresse(nouvelleAdresse);
-        lieuRepository.save(lieu);
+        lieuDao.save(lieu);
         return true;
     }
 
@@ -63,7 +63,7 @@ public class LieuServiceImpl implements LieuService {
      */
     @Override
     public boolean supprimerLieu(String id) {
-        LieuRecharge lieu = lieuRepository.findById(id);
+        LieuRecharge lieu = lieuDao.findById(id);
         if (lieu == null) return false;
 
         if (!lieu.getBornes().isEmpty()) {
@@ -71,7 +71,7 @@ public class LieuServiceImpl implements LieuService {
             return false;
         }
 
-        lieuRepository.deleteById(id);
+        lieuDao.deleteById(id);
         return true;
     }
 
@@ -82,7 +82,7 @@ public class LieuServiceImpl implements LieuService {
      */
     @Override
     public List<LieuRecharge> listerLieux() {
-        return lieuRepository.findAll();
+        return lieuDao.findAll();
     }
 
     /**
@@ -93,6 +93,6 @@ public class LieuServiceImpl implements LieuService {
      */
     @Override
     public LieuRecharge trouverParId(String id) {
-        return lieuRepository.findById(id);
+        return lieuDao.findById(id);
     }
 }

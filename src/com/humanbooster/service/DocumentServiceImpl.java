@@ -1,9 +1,9 @@
 package src.com.humanbooster.service;
 
+import src.com.humanbooster.dao.LieuDao;
 import src.com.humanbooster.model.BorneRecharge;
 import src.com.humanbooster.model.LieuRecharge;
 import src.com.humanbooster.model.Reservation;
-import src.com.humanbooster.repository.LieuRepository;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -20,15 +20,15 @@ public class DocumentServiceImpl implements DocumentService {
     private static final String EXPORT_DIR = "exports";
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
-    private final LieuRepository lieuRepository;
+    private final LieuDao lieuDao;
 
     /**
      * Constructeur de la classe DocumentServiceImpl.
      *
-     * @param lieuRepository Le repository des lieux de recharge.
+     * @param lieuDao Le dao des lieux de recharge.
      */
-    public DocumentServiceImpl(LieuRepository lieuRepository) {
-        this.lieuRepository = lieuRepository;
+    public DocumentServiceImpl(LieuDao lieuDao) {
+        this.lieuDao = lieuDao;
     }
 
     /**
@@ -73,7 +73,7 @@ public class DocumentServiceImpl implements DocumentService {
      * @return La borne de recharge correspondante, ou null si introuvable.
      */
     private BorneRecharge trouverBorneParId(String idBorne) {
-        for (LieuRecharge lieu : lieuRepository.findAll()) {
+        for (LieuRecharge lieu : lieuDao.findAll()) {
             for (BorneRecharge borne : lieu.getBornes()) {
                 if (borne.getId().equals(idBorne)) return borne;
             }

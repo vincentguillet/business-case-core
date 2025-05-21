@@ -1,4 +1,4 @@
-package src.com.humanbooster.repository;
+package src.com.humanbooster.dao;
 
 import src.com.humanbooster.model.Utilisateur;
 import src.com.humanbooster.util.JsonFileManager;
@@ -6,18 +6,18 @@ import src.com.humanbooster.util.JsonFileManager;
 import java.util.List;
 
 /**
- * Classe UserRepository
+ * Classe UserDao
  * Décrit la gestion des utilisateurs en mémoire via un fichier JSON.
  */
-public class UserRepository {
+public class UserDao {
 
     private final List<Utilisateur> utilisateurs;
 
     /**
-     * Constructeur de la classe UserRepository
+     * Constructeur de la classe UserDao
      * Charge les utilisateurs depuis le fichier JSON.
      */
-    public UserRepository() {
+    public UserDao() {
         this.utilisateurs = JsonFileManager.readUtilisateurs();
     }
 

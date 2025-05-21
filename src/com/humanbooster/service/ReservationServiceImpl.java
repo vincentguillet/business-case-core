@@ -1,8 +1,8 @@
 package src.com.humanbooster.service;
 
+import src.com.humanbooster.dao.LieuDao;
+import src.com.humanbooster.dao.ReservationDao;
 import src.com.humanbooster.model.*;
-import src.com.humanbooster.repository.LieuRepository;
-import src.com.humanbooster.repository.ReservationRepository;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -14,20 +14,20 @@ import java.util.UUID;
  */
 public class ReservationServiceImpl implements ReservationService {
 
-    private final ReservationRepository reservationRepository;
-    private final LieuRepository lieuRepository;
+    private final ReservationDao reservationDao;
+    private final LieuDao lieuDao;
     private final DocumentService documentService;
 
     /**
      * Constructeur de la classe ReservationServiceImpl.
      *
-     * @param reservationRepository le dépôt de réservations
-     * @param lieuRepository        le dépôt de lieux
+     * @param reservationDao le dépôt de réservations
+     * @param lieuDao        le dépôt de lieux
      * @param documentService       le service de documents
      */
-    public ReservationServiceImpl(ReservationRepository reservationRepository, LieuRepository lieuRepository, DocumentService documentService) {
-        this.reservationRepository = reservationRepository;
-        this.lieuRepository = lieuRepository;
+    public ReservationServiceImpl(ReservationDao reservationDao, LieuDao lieuDao, DocumentService documentService) {
+        this.reservationDao = reservationDao;
+        this.lieuDao = lieuDao;
         this.documentService = documentService;
     }
 
@@ -40,7 +40,7 @@ public class ReservationServiceImpl implements ReservationService {
      */
     @Override
     public List<Reservation> chercherBornesDisponibles(LocalDateTime debut, LocalDateTime fin) {
-        List<Reservation> toutes = reservationRepository.findAll();
+        List<Reservation> toutes = reservationDao.findAll();
         List<Reservation> conflits = new ArrayList<>();
 
         for (Reservation r : toutes) {
@@ -56,7 +56,7 @@ public class ReservationServiceImpl implements ReservationService {
                 .toList();
 
         List<Reservation> bornesDisponibles = new ArrayList<>();
-        List<LieuRecharge> lieux = lieuRepository.findAll();
+        List<LieuRecharge> lieux = lieuDao.findAll();
 
         for (LieuRecharge lieu : lieux) {
             for (BorneRecharge borne : lieu.getBornes()) {
@@ -96,7 +96,7 @@ public class ReservationServiceImpl implements ReservationService {
                 fin,
                 StatutReservation.EN_ATTENTE
         );
-        reservationRepository.save(r);
+        reservationDao.save(r);
         return r;
     }
 
@@ -108,11 +108,11 @@ public class ReservationServiceImpl implements ReservationService {
      */
     @Override
     public boolean accepterReservation(String idReservation) {
-        Reservation r = reservationRepository.findById(idReservation);
+        Reservation r = reservationDao.findById(idReservation);
         if (r == null || r.getStatut() != StatutReservation.EN_ATTENTE) return false;
 
         r.setStatut(StatutReservation.ACCEPTEE);
-        reservationRepository.save(r);
+        reservationDao.save(r);
 
         documentService.genererRecuReservation(r); // génération du reçu
 
@@ -127,11 +127,11 @@ public class ReservationServiceImpl implements ReservationService {
      */
     @Override
     public boolean refuserReservation(String idReservation) {
-        Reservation r = reservationRepository.findById(idReservation);
+        Reservation r = reservationDao.findById(idReservation);
         if (r == null || r.getStatut() != StatutReservation.EN_ATTENTE) return false;
 
         r.setStatut(StatutReservation.REFUSEE);
-        reservationRepository.save(r);
+        reservationDao.save(r);
         return true;
     }
 
@@ -143,7 +143,7 @@ public class ReservationServiceImpl implements ReservationService {
      */
     @Override
     public List<Reservation> getReservationsUtilisateur(String idUtilisateur) {
-        List<Reservation> toutes = reservationRepository.findAll();
+        List<Reservation> toutes = reservationDao.findAll();
         return toutes.stream()
                 .filter(r -> idUtilisateur.equals(r.getIdUtilisateur()))
                 .toList();
@@ -156,6 +156,6 @@ public class ReservationServiceImpl implements ReservationService {
      */
     @Override
     public List<Reservation> getToutesReservations() {
-        return reservationRepository.findAll();
+        return reservationDao.findAll();
     }
 }

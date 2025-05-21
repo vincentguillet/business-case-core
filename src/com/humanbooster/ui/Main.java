@@ -4,11 +4,9 @@ import src.com.humanbooster.controller.AuthController;
 import src.com.humanbooster.controller.BorneController;
 import src.com.humanbooster.controller.LieuController;
 import src.com.humanbooster.controller.ReservationController;
-import src.com.humanbooster.model.BorneRecharge;
-import src.com.humanbooster.model.LieuRecharge;
-import src.com.humanbooster.repository.LieuRepository;
-import src.com.humanbooster.repository.ReservationRepository;
-import src.com.humanbooster.repository.UserRepository;
+import src.com.humanbooster.dao.LieuDao;
+import src.com.humanbooster.dao.ReservationDao;
+import src.com.humanbooster.dao.UserDao;
 import src.com.humanbooster.service.*;
 
 import java.util.Scanner;
@@ -19,19 +17,19 @@ public class Main {
 
         Scanner scanner = new Scanner(System.in);
 
-        // Repositories
-        UserRepository userRepo = new UserRepository();
-        LieuRepository lieuRepo = new LieuRepository();
-        ReservationRepository reservationRepo = new ReservationRepository();
+        // Dao
+        UserDao userRepo = new UserDao();
+        LieuDao lieuRepo = new LieuDao();
+        ReservationDao reservationRepo = new ReservationDao();
 
-        // Services
+        // Service
         AuthService authService = new AuthServiceImpl(userRepo);
         LieuService lieuService = new LieuServiceImpl(lieuRepo);
         BorneService borneService = new BorneServiceImpl(lieuRepo, reservationRepo);
         DocumentService documentService = new DocumentServiceImpl(lieuRepo);
         ReservationService reservationService = new ReservationServiceImpl(reservationRepo, lieuRepo, documentService);
 
-        // Controllers
+        // Controller
         AuthController authController = new AuthController(authService, scanner);
         LieuController lieuController = new LieuController(lieuService, scanner);
         BorneController borneController = new BorneController(borneService, lieuController, scanner);

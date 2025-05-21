@@ -1,4 +1,4 @@
-package src.com.humanbooster.repository;
+package src.com.humanbooster.dao;
 
 import src.com.humanbooster.model.Reservation;
 import src.com.humanbooster.model.StatutReservation;
@@ -10,19 +10,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Classe ReservationRepository
+ * Classe ReservationDao
  * Permet de gérer les réservations en les lisant et en les écrivant dans un fichier JSON.
  */
-public class ReservationRepository {
+public class ReservationDao {
 
     private static final String FILE_PATH = "data/reservations.json";
     private final List<Reservation> reservations;
 
     /**
-     * Constructeur de la classe ReservationRepository.
+     * Constructeur de la classe ReservationDao.
      * Initialise la liste des réservations en lisant le fichier JSON.
      */
-    public ReservationRepository() {
+    public ReservationDao() {
         this.reservations = readReservations();
     }
 
