@@ -10,9 +10,9 @@ import java.util.List;
  */
 public interface BorneService {
 
-    boolean ajouterBorne(String idLieu, BorneRecharge borne);
-    boolean modifierBorne(String idLieu, BorneRecharge borneModifiee);
-    boolean supprimerBorne(String idLieu, String idBorne);
-    List<BorneRecharge> listerBornesParLieu(String idLieu);
-    BorneRecharge trouverBorneParId(String idLieu, String idBorne);
+    boolean ajouterBorne(Long idLieu, BorneRecharge borne);
+    boolean modifierBorne(Long idLieu, BorneRecharge borneModifiee);
+    boolean supprimerBorne(Long idLieu, Long idBorne);
+    List<BorneRecharge> listerBornesParLieu(Long idLieu);
+    BorneRecharge trouverBorneParId(Long idLieu, Long idBorne);
 }

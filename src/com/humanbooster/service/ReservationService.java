@@ -11,9 +11,9 @@ import java.util.List;
 public interface ReservationService {
 
     List<Reservation> chercherBornesDisponibles(LocalDateTime debut, LocalDateTime fin);
-    Reservation creerReservation(String idUtilisateur, String idBorne, LocalDateTime debut, LocalDateTime fin);
-    boolean accepterReservation(String idReservation);
-    boolean refuserReservation(String idReservation);
-    List<Reservation> getReservationsUtilisateur(String idUtilisateur);
+    Reservation creerReservation(Long idUtilisateur, Long idBorne, LocalDateTime debut, LocalDateTime fin);
+    boolean accepterReservation(Long idReservation);
+    boolean refuserReservation(Long idReservation);
+    List<Reservation> getReservationsUtilisateur(Long idUtilisateur);
     List<Reservation> getToutesReservations(); // Pour l'administration
 }

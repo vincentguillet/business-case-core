@@ -1,10 +1,10 @@
 package src.com.humanbooster.dao;
 
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import src.com.humanbooster.model.Utilisateur;
-import src.com.humanbooster.util.JsonFileManager;
-
-import java.util.List;
 
 /**
  * Classe UserDao
@@ -12,27 +12,12 @@ import java.util.List;
  */
 public class UserDao extends GenericDaoImpl<Utilisateur, Long> {
 
-    private final List<Utilisateur> utilisateurs;
-
     /**
      * Constructeur de la classe UserDao
      * Charge les utilisateurs depuis le fichier JSON.
      */
     public UserDao(SessionFactory sessionFactory) {
         super(sessionFactory, Utilisateur.class);
-        this.utilisateurs = JsonFileManager.readUtilisateurs();
-    }
-
-    /**
-     * Enregistre un utilisateur dans la liste et le fichier JSON.
-     * Si l'utilisateur existe déjà (même email), il est remplacé.
-     *
-     * @param utilisateur L'utilisateur à enregistrer.
-     */
-    public void save(Utilisateur utilisateur) {
-        utilisateurs.removeIf(u -> u.getEmail().equalsIgnoreCase(utilisateur.getEmail()));
-        utilisateurs.add(utilisateur);
-        JsonFileManager.writeUtilisateurs(utilisateurs);
     }
 
     /**
@@ -41,10 +26,11 @@ public class UserDao extends GenericDaoImpl<Utilisateur, Long> {
      * @param email L'email de l'utilisateur à rechercher.
      */
     public Utilisateur findByEmail(String email) {
-        return utilisateurs.stream()
-                .filter(u -> u.getEmail().equalsIgnoreCase(email))
-                .findFirst()
-                .orElse(null);
+        try(Session session = sessionFactory.openSession()){
+            return session.createQuery("FROM " + Utilisateur.class.getSimpleName() + " WHERE email = :email", Utilisateur.class)
+                    .setParameter("email", email)
+                    .uniqueResult();
+        }
     }
 
     /**
@@ -54,16 +40,14 @@ public class UserDao extends GenericDaoImpl<Utilisateur, Long> {
      * @return true si l'utilisateur existe, false sinon.
      */
     public boolean existsByEmail(String email) {
-        return utilisateurs.stream()
-                .anyMatch(u -> u.getEmail().equalsIgnoreCase(email));
-    }
+        try(Session session = sessionFactory.openSession()){
+            CriteriaBuilder cb = session.getCriteriaBuilder();
+            CriteriaQuery<Long> query = cb.createQuery(Long.class);
 
-    /**
-     * Récupère la liste de tous les utilisateurs.
-     *
-     * @return La liste de tous les utilisateurs.
-     */
-    public List<Utilisateur> findAll() {
-        return utilisateurs;
+            query.select(cb.count(query.from(Utilisateur.class)))
+                    .where(cb.equal(query.from(Utilisateur.class).get("email"), email));
+
+            return session.createQuery(query).getSingleResult() > 0;
+        }
     }
 }

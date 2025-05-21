@@ -34,8 +34,8 @@ public class BorneServiceImpl implements BorneService {
      * @return true si la borne a été ajoutée avec succès, false sinon.
      */
     @Override
-    public boolean ajouterBorne(String idLieu, BorneRecharge borne) {
-        LieuRecharge lieu = lieuDao.findById(idLieu);
+    public boolean ajouterBorne(Long idLieu, BorneRecharge borne) {
+        LieuRecharge lieu = lieuDao.readById(idLieu);
         if (lieu == null) return false;
 
         if (lieu.getBornes().stream().anyMatch(b -> b.getId().equals(borne.getId()))) {
@@ -43,7 +43,7 @@ public class BorneServiceImpl implements BorneService {
         }
 
         lieu.ajouterBorne(borne);
-        lieuDao.save(lieu);
+        lieuDao.create(lieu);
         return true;
     }
 
@@ -55,15 +55,15 @@ public class BorneServiceImpl implements BorneService {
      * @return true si la borne a été modifiée avec succès, false sinon.
      */
     @Override
-    public boolean modifierBorne(String idLieu, BorneRecharge borneModifiee) {
-        LieuRecharge lieu = lieuDao.findById(idLieu);
+    public boolean modifierBorne(Long idLieu, BorneRecharge borneModifiee) {
+        LieuRecharge lieu = lieuDao.readById(idLieu);
         if (lieu == null) return false;
 
         List<BorneRecharge> bornes = lieu.getBornes();
         for (int i = 0; i < bornes.size(); i++) {
             if (bornes.get(i).getId().equals(borneModifiee.getId())) {
                 bornes.set(i, borneModifiee);
-                lieuDao.save(lieu);
+                lieuDao.update(lieu);
                 return true;
             }
         }
@@ -78,8 +78,8 @@ public class BorneServiceImpl implements BorneService {
      * @return true si la borne a été supprimée avec succès, false sinon.
      */
     @Override
-    public boolean supprimerBorne(String idLieu, String idBorne) {
-        LieuRecharge lieu = lieuDao.findById(idLieu);
+    public boolean supprimerBorne(Long idLieu, Long idBorne) {
+        LieuRecharge lieu = lieuDao.readById(idLieu);
         if (lieu == null) return false;
 
         // Vérifie s'il existe une réservation FUTURE sur cette borne
@@ -93,7 +93,7 @@ public class BorneServiceImpl implements BorneService {
 
         boolean removed = lieu.getBornes().removeIf(b -> b.getId().equals(idBorne));
         if (removed) {
-            lieuDao.save(lieu);
+            lieuDao.update(lieu);
             return true;
         }
         return false;
@@ -106,8 +106,8 @@ public class BorneServiceImpl implements BorneService {
      * @return La liste des bornes de recharge du lieu.
      */
     @Override
-    public List<BorneRecharge> listerBornesParLieu(String idLieu) {
-        LieuRecharge lieu = lieuDao.findById(idLieu);
+    public List<BorneRecharge> listerBornesParLieu(Long idLieu) {
+        LieuRecharge lieu = lieuDao.readById(idLieu);
         return (lieu != null) ? lieu.getBornes() : List.of();
     }
 
@@ -119,8 +119,8 @@ public class BorneServiceImpl implements BorneService {
      * @return La borne de recharge trouvée, ou null si elle n'existe pas.
      */
     @Override
-    public BorneRecharge trouverBorneParId(String idLieu, String idBorne) {
-        LieuRecharge lieu = lieuDao.findById(idLieu);
+    public BorneRecharge trouverBorneParId(Long idLieu, Long idBorne) {
+        LieuRecharge lieu = lieuDao.readById(idLieu);
         if (lieu == null) return null;
 
         return lieu.getBornes().stream()

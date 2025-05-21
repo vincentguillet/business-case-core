@@ -31,8 +31,8 @@ public class LieuServiceImpl implements LieuService {
      */
     @Override
     public LieuRecharge ajouterLieu(String nom, String adresse) {
-        LieuRecharge lieu = new LieuRecharge(UUID.randomUUID().toString(), nom, adresse);
-        lieuDao.save(lieu);
+        LieuRecharge lieu = new LieuRecharge(Long.valueOf(UUID.randomUUID().toString()), nom, adresse);
+        lieuDao.create(lieu);
         return lieu;
     }
 
@@ -45,13 +45,13 @@ public class LieuServiceImpl implements LieuService {
      * @return true si la modification a réussi, false sinon.
      */
     @Override
-    public boolean modifierLieu(String id, String nouveauNom, String nouvelleAdresse) {
-        LieuRecharge lieu = lieuDao.findById(id);
+    public boolean modifierLieu(Long id, String nouveauNom, String nouvelleAdresse) {
+        LieuRecharge lieu = lieuDao.readById(id);
         if (lieu == null) return false;
 
         lieu.setNom(nouveauNom);
         lieu.setAdresse(nouvelleAdresse);
-        lieuDao.save(lieu);
+        lieuDao.update(lieu);
         return true;
     }
 
@@ -62,8 +62,8 @@ public class LieuServiceImpl implements LieuService {
      * @return true si la suppression a réussi, false sinon.
      */
     @Override
-    public boolean supprimerLieu(String id) {
-        LieuRecharge lieu = lieuDao.findById(id);
+    public boolean supprimerLieu(Long id) {
+        LieuRecharge lieu = lieuDao.readById(id);
         if (lieu == null) return false;
 
         if (!lieu.getBornes().isEmpty()) {
@@ -71,7 +71,7 @@ public class LieuServiceImpl implements LieuService {
             return false;
         }
 
-        lieuDao.deleteById(id);
+        lieuDao.delete(id);
         return true;
     }
 
@@ -82,7 +82,7 @@ public class LieuServiceImpl implements LieuService {
      */
     @Override
     public List<LieuRecharge> listerLieux() {
-        return lieuDao.findAll();
+        return lieuDao.readAll();
     }
 
     /**
@@ -92,7 +92,7 @@ public class LieuServiceImpl implements LieuService {
      * @return Le lieu de recharge trouvé, ou null s'il n'existe pas.
      */
     @Override
-    public LieuRecharge trouverParId(String id) {
-        return lieuDao.findById(id);
+    public LieuRecharge trouverParId(Long id) {
+        return lieuDao.readById(id);
     }
 }

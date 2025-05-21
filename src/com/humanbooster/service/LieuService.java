@@ -10,8 +10,8 @@ import java.util.List;
 public interface LieuService {
 
     LieuRecharge ajouterLieu(String nom, String adresse);
-    boolean modifierLieu(String id, String nouveauNom, String nouvelleAdresse);
-    boolean supprimerLieu(String id);
+    boolean modifierLieu(Long id, String nouveauNom, String nouvelleAdresse);
+    boolean supprimerLieu(Long id);
     List<LieuRecharge> listerLieux();
-    LieuRecharge trouverParId(String id);
+    LieuRecharge trouverParId(Long id);
 }

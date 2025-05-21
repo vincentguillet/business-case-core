@@ -72,8 +72,8 @@ public class DocumentServiceImpl implements DocumentService {
      * @param idBorne L'ID de la borne à trouver.
      * @return La borne de recharge correspondante, ou null si introuvable.
      */
-    private BorneRecharge trouverBorneParId(String idBorne) {
-        for (LieuRecharge lieu : lieuDao.findAll()) {
+    private BorneRecharge trouverBorneParId(Long idBorne) {
+        for (LieuRecharge lieu : lieuDao.readAll()) {
             for (BorneRecharge borne : lieu.getBornes()) {
                 if (borne.getId().equals(idBorne)) return borne;
             }

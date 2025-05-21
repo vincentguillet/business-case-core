@@ -28,7 +28,7 @@ public class ReservationController {
      *
      * @param idUtilisateur L'identifiant de l'utilisateur
      */
-    public void rechercherEtReserver(String idUtilisateur) {
+    public void rechercherEtReserver(Long idUtilisateur) {
         System.out.println("=== Rechercher une borne disponible ===");
 
         LocalDateTime debut = saisirDateHeure("Date et heure de début (ex: 2025-05-05 14:00) : ");
@@ -60,7 +60,7 @@ public class ReservationController {
             return;
         }
 
-        String idBorne = disponibles.get(choix - 1).getIdBorne();
+        Long idBorne = disponibles.get(choix - 1).getIdBorne();
         Reservation r = reservationService.creerReservation(idUtilisateur, idBorne, debut, fin);
         System.out.println("Réservation créée avec statut EN_ATTENTE. ID : " + r.getId());
     }
@@ -70,7 +70,7 @@ public class ReservationController {
      *
      * @param idUtilisateur L'identifiant de l'utilisateur
      */
-    public void afficherMesReservations(String idUtilisateur) {
+    public void afficherMesReservations(Long idUtilisateur) {
         List<Reservation> mesReservations = reservationService.getReservationsUtilisateur(idUtilisateur);
 
         if (mesReservations.isEmpty()) {

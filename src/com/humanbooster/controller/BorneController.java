@@ -46,14 +46,14 @@ public class BorneController {
      *
      * @param idLieu ID du lieu
      */
-    public void ajouterBorne(String idLieu) {
+    public void ajouterBorne(Long idLieu) {
         System.out.println("=== Ajouter une borne ===");
 
         System.out.print("Tarif horaire : ");
         double tarif = Double.parseDouble(scanner.nextLine());
 
         BorneRecharge borne = new BorneRecharge(
-                UUID.randomUUID().toString(),
+                Long.valueOf(UUID.randomUUID().toString()),
                 EtatBorne.DISPONIBLE,
                 tarif
         );
@@ -77,7 +77,7 @@ public class BorneController {
      *
      * @param idLieu ID du lieu
      */
-    public void modifierBorne(String idLieu) {
+    public void modifierBorne(Long idLieu) {
         BorneRecharge borne = selectionnerBorne(idLieu);
         if (borne == null) return;
 
@@ -104,7 +104,7 @@ public class BorneController {
      * Supprimer une borne de recharge su
      * @param idLieu L'id du lieu
      */
-    public void supprimerBorne(String idLieu) {
+    public void supprimerBorne(Long idLieu) {
         BorneRecharge borne = selectionnerBorne(idLieu);
         if (borne == null) return;
 
@@ -126,7 +126,7 @@ public class BorneController {
      *
      * @param idLieu ID du lieu
      */
-    public void listerBornes(String idLieu) {
+    public void listerBornes(Long idLieu) {
         List<BorneRecharge> bornes = borneService.listerBornesParLieu(idLieu);
         if (bornes.isEmpty()) {
             System.out.println("Aucune borne pour ce lieu.");
@@ -145,7 +145,7 @@ public class BorneController {
      * @param idLieu ID du lieu
      * @return BorneRecharge sélectionnée ou null si aucune sélection
      */
-    public BorneRecharge selectionnerBorne(String idLieu) {
+    public BorneRecharge selectionnerBorne(Long idLieu) {
         List<BorneRecharge> bornes = borneService.listerBornesParLieu(idLieu);
         if (bornes.isEmpty()) {
             System.out.println("Aucune borne pour ce lieu.");

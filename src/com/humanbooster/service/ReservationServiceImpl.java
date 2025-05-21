@@ -40,7 +40,7 @@ public class ReservationServiceImpl implements ReservationService {
      */
     @Override
     public List<Reservation> chercherBornesDisponibles(LocalDateTime debut, LocalDateTime fin) {
-        List<Reservation> toutes = reservationDao.findAll();
+        List<Reservation> toutes = reservationDao.readAll();
         List<Reservation> conflits = new ArrayList<>();
 
         for (Reservation r : toutes) {
@@ -50,19 +50,19 @@ public class ReservationServiceImpl implements ReservationService {
             }
         }
 
-        List<String> bornesIndisponibles = conflits.stream()
+        List<Long> bornesIndisponibles = conflits.stream()
                 .map(Reservation::getIdBorne)
                 .distinct()
                 .toList();
 
         List<Reservation> bornesDisponibles = new ArrayList<>();
-        List<LieuRecharge> lieux = lieuDao.findAll();
+        List<LieuRecharge> lieux = lieuDao.readAll();
 
         for (LieuRecharge lieu : lieux) {
             for (BorneRecharge borne : lieu.getBornes()) {
                 if (!bornesIndisponibles.contains(borne.getId()) && borne.getEtat() == EtatBorne.DISPONIBLE) {
                     Reservation r = new Reservation(
-                            "DISPONIBLE",
+                            Long.valueOf(UUID.randomUUID().toString()),
                             null,
                             borne.getId(),
                             debut,
@@ -87,16 +87,16 @@ public class ReservationServiceImpl implements ReservationService {
      * @return la réservation créée
      */
     @Override
-    public Reservation creerReservation(String idUtilisateur, String idBorne, LocalDateTime debut, LocalDateTime fin) {
+    public Reservation creerReservation(Long idUtilisateur, Long idBorne, LocalDateTime debut, LocalDateTime fin) {
         Reservation r = new Reservation(
-                UUID.randomUUID().toString(),
+                Long.valueOf(UUID.randomUUID().toString()),
                 idUtilisateur,
                 idBorne,
                 debut,
                 fin,
                 StatutReservation.EN_ATTENTE
         );
-        reservationDao.save(r);
+        reservationDao.create(r);
         return r;
     }
 
@@ -107,12 +107,12 @@ public class ReservationServiceImpl implements ReservationService {
      * @return true si la réservation a été acceptée, false sinon
      */
     @Override
-    public boolean accepterReservation(String idReservation) {
-        Reservation r = reservationDao.findById(idReservation);
+    public boolean accepterReservation(Long idReservation) {
+        Reservation r = reservationDao.readById(idReservation);
         if (r == null || r.getStatut() != StatutReservation.EN_ATTENTE) return false;
 
         r.setStatut(StatutReservation.ACCEPTEE);
-        reservationDao.save(r);
+        reservationDao.update(r);
 
         documentService.genererRecuReservation(r); // génération du reçu
 
@@ -126,12 +126,12 @@ public class ReservationServiceImpl implements ReservationService {
      * @return true si la réservation a été refusée, false sinon
      */
     @Override
-    public boolean refuserReservation(String idReservation) {
-        Reservation r = reservationDao.findById(idReservation);
+    public boolean refuserReservation(Long idReservation) {
+        Reservation r = reservationDao.readById(idReservation);
         if (r == null || r.getStatut() != StatutReservation.EN_ATTENTE) return false;
 
         r.setStatut(StatutReservation.REFUSEE);
-        reservationDao.save(r);
+        reservationDao.update(r);
         return true;
     }
 
@@ -142,8 +142,8 @@ public class ReservationServiceImpl implements ReservationService {
      * @return La liste des réservations de l'utilisateur
      */
     @Override
-    public List<Reservation> getReservationsUtilisateur(String idUtilisateur) {
-        List<Reservation> toutes = reservationDao.findAll();
+    public List<Reservation> getReservationsUtilisateur(Long idUtilisateur) {
+        List<Reservation> toutes = reservationDao.readAll();
         return toutes.stream()
                 .filter(r -> idUtilisateur.equals(r.getIdUtilisateur()))
                 .toList();
@@ -156,6 +156,6 @@ public class ReservationServiceImpl implements ReservationService {
      */
     @Override
     public List<Reservation> getToutesReservations() {
-        return reservationDao.findAll();
+        return reservationDao.readAll();
     }
 }

@@ -13,7 +13,7 @@ import java.util.List;
  */
 public class GenericDaoImpl<T, ID> implements  GenericDao<T,ID> {
 
-    private final SessionFactory sessionFactory;
+    protected final SessionFactory sessionFactory;
     private final Class<T> entityClass;
 
     /**

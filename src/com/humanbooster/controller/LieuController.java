@@ -50,7 +50,7 @@ public class LieuController {
         String id = scanner.nextLine();
 
         // Vérification de l'existence du lieu
-        LieuRecharge lieu = lieuService.trouverParId(id);
+        LieuRecharge lieu = lieuService.trouverParId(Long.valueOf(id));
         if (lieu == null) {
             System.out.println("Lieu introuvable.");
             return;
@@ -63,7 +63,7 @@ public class LieuController {
         String adresse = scanner.nextLine();
 
         // Modification du lieu
-        boolean ok = lieuService.modifierLieu(id, nom.isBlank() ? lieu.getNom() : nom,
+        boolean ok = lieuService.modifierLieu(Long.valueOf(id), nom.isBlank() ? lieu.getNom() : nom,
                 adresse.isBlank() ? lieu.getAdresse() : adresse);
         if (ok) System.out.println("Lieu modifié.");
         else System.out.println("Erreur lors de la modification.");
