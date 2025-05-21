@@ -116,13 +116,13 @@ public class Menu {
                     if (lieu == null) return;
 
                     while (!retour) {
-                        borneController.listerBornes(lieu.getId());
+                        borneController.listerBornes(lieu);
                         System.out.println("a. Ajouter | m. Modifier | s. Supprimer | r. Retour");
                         String action = scanner.nextLine();
                         switch (action) {
-                            case "a" -> borneController.ajouterBorne(lieu.getId());
-                            case "m" -> borneController.modifierBorne(lieu.getId());
-                            case "s" -> borneController.supprimerBorne(lieu.getId());
+                            case "a" -> borneController.ajouterBorne(lieu);
+                            case "m" -> borneController.modifierBorne(lieu);
+                            case "s" -> borneController.supprimerBorne(lieu);
                             case "r" -> retour = true;
                             default -> System.out.println("Choix invalide.");
                         }
