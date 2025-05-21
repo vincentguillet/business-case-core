@@ -20,7 +20,7 @@ public class LieuRecharge {
     private String nom;
     private String adresse;
 
-    @OneToMany(mappedBy = "lieuRecharge", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "lieuRecharge", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<BorneRecharge> bornes;
 
     /**
