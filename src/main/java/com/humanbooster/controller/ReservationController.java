@@ -49,7 +49,7 @@ public class ReservationController {
         System.out.println("Bornes disponibles :");
         for (int i = 0; i < disponibles.size(); i++) {
             Reservation r = disponibles.get(i);
-            System.out.println((i + 1) + ". Borne ID : " + r.getBorneRecharge().getId());
+            System.out.println((i + 1) + ". Borne ID : " + r.getBorneRecharge().hashCode());
         }
 
         System.out.print("Sélectionner une borne (numéro) ou 0 pour annuler : ");
