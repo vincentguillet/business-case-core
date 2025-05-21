@@ -6,7 +6,7 @@ import src.com.humanbooster.controller.AuthController;
 import src.com.humanbooster.controller.BorneController;
 import src.com.humanbooster.controller.LieuController;
 import src.com.humanbooster.controller.ReservationController;
-import src.com.humanbooster.dao.LieuDao;
+import src.com.humanbooster.dao.LieuRechargeDao;
 import src.com.humanbooster.dao.ReservationDao;
 import src.com.humanbooster.dao.UserDao;
 import src.com.humanbooster.service.*;
@@ -27,15 +27,15 @@ public class Main {
 
         // Dao
         UserDao userDao = new UserDao();
-        LieuDao lieuDao = new LieuDao();
+        LieuRechargeDao lieuRechargeDao = new LieuRechargeDao();
         ReservationDao reservationDao = new ReservationDao();
 
         // Service
         AuthService authService = new AuthServiceImpl(userDao);
-        LieuService lieuService = new LieuServiceImpl(lieuDao);
-        BorneService borneService = new BorneServiceImpl(lieuDao, reservationDao);
-        DocumentService documentService = new DocumentServiceImpl(lieuDao);
-        ReservationService reservationService = new ReservationServiceImpl(reservationDao, lieuDao, documentService);
+        LieuService lieuService = new LieuServiceImpl(lieuRechargeDao);
+        BorneService borneService = new BorneServiceImpl(lieuRechargeDao, reservationDao);
+        DocumentService documentService = new DocumentServiceImpl(lieuRechargeDao);
+        ReservationService reservationService = new ReservationServiceImpl(reservationDao, lieuRechargeDao, documentService);
 
         // Controller
         AuthController authController = new AuthController(authService, scanner);

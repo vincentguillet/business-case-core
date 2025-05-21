@@ -1,7 +1,7 @@
 package src.com.humanbooster.service;
 
+import src.com.humanbooster.dao.LieuRechargeDao;
 import src.com.humanbooster.model.LieuRecharge;
-import src.com.humanbooster.dao.LieuDao;
 
 import java.util.List;
 import java.util.UUID;
@@ -11,15 +11,15 @@ import java.util.UUID;
  */
 public class LieuServiceImpl implements LieuService {
 
-    private final LieuDao lieuDao;
+    private final LieuRechargeDao lieuDao;
 
     /**
      * Constructeur de la classe LieuServiceImpl.
      *
-     * @param lieuDao Le dépôt de lieux de recharge.
+     * @param lieuRechargeDao Le dépôt de lieux de recharge.
      */
-    public LieuServiceImpl(LieuDao lieuDao) {
-        this.lieuDao = lieuDao;
+    public LieuServiceImpl(LieuRechargeDao lieuRechargeDao) {
+        this.lieuDao = lieuRechargeDao;
     }
 
     /**

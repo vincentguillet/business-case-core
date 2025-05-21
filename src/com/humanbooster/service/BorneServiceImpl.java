@@ -1,6 +1,6 @@
 package src.com.humanbooster.service;
 
-import src.com.humanbooster.dao.LieuDao;
+import src.com.humanbooster.dao.LieuRechargeDao;
 import src.com.humanbooster.dao.ReservationDao;
 import src.com.humanbooster.model.BorneRecharge;
 import src.com.humanbooster.model.LieuRecharge;
@@ -12,17 +12,17 @@ import java.util.List;
  */
 public class BorneServiceImpl implements BorneService {
 
-    private final LieuDao lieuDao;
+    private final LieuRechargeDao lieuDao;
     private final ReservationDao reservationDao;
 
     /**
      * Constructeur de la classe BorneServiceImpl.
      *
-     * @param lieuDao        Le dao pour les lieux de recharge.
+     * @param lieuRechargeDao        Le dao pour les lieux de recharge.
      * @param reservationDao  Le dao pour les réservations.
      */
-    public BorneServiceImpl(LieuDao lieuDao, ReservationDao reservationDao) {
-        this.lieuDao = lieuDao;
+    public BorneServiceImpl(LieuRechargeDao lieuRechargeDao, ReservationDao reservationDao) {
+        this.lieuDao = lieuRechargeDao;
         this.reservationDao = reservationDao;
     }
 

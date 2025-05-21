@@ -1,6 +1,6 @@
 package src.com.humanbooster.service;
 
-import src.com.humanbooster.dao.LieuDao;
+import src.com.humanbooster.dao.LieuRechargeDao;
 import src.com.humanbooster.dao.ReservationDao;
 import src.com.humanbooster.model.*;
 
@@ -15,19 +15,19 @@ import java.util.UUID;
 public class ReservationServiceImpl implements ReservationService {
 
     private final ReservationDao reservationDao;
-    private final LieuDao lieuDao;
+    private final LieuRechargeDao lieuDao;
     private final DocumentService documentService;
 
     /**
      * Constructeur de la classe ReservationServiceImpl.
      *
      * @param reservationDao le dépôt de réservations
-     * @param lieuDao        le dépôt de lieux
+     * @param lieuRechargeDao        le dépôt de lieux
      * @param documentService       le service de documents
      */
-    public ReservationServiceImpl(ReservationDao reservationDao, LieuDao lieuDao, DocumentService documentService) {
+    public ReservationServiceImpl(ReservationDao reservationDao, LieuRechargeDao lieuRechargeDao, DocumentService documentService) {
         this.reservationDao = reservationDao;
-        this.lieuDao = lieuDao;
+        this.lieuDao = lieuRechargeDao;
         this.documentService = documentService;
     }
 

@@ -1,6 +1,6 @@
 package src.com.humanbooster.service;
 
-import src.com.humanbooster.dao.LieuDao;
+import src.com.humanbooster.dao.LieuRechargeDao;
 import src.com.humanbooster.model.BorneRecharge;
 import src.com.humanbooster.model.LieuRecharge;
 import src.com.humanbooster.model.Reservation;
@@ -20,15 +20,15 @@ public class DocumentServiceImpl implements DocumentService {
     private static final String EXPORT_DIR = "exports";
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
-    private final LieuDao lieuDao;
+    private final LieuRechargeDao lieuDao;
 
     /**
      * Constructeur de la classe DocumentServiceImpl.
      *
-     * @param lieuDao Le dao des lieux de recharge.
+     * @param lieuRechargeDao Le dao des lieux de recharge.
      */
-    public DocumentServiceImpl(LieuDao lieuDao) {
-        this.lieuDao = lieuDao;
+    public DocumentServiceImpl(LieuRechargeDao lieuRechargeDao) {
+        this.lieuDao = lieuRechargeDao;
     }
 
     /**
