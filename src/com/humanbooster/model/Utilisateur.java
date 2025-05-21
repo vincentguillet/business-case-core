@@ -1,32 +1,60 @@
 package src.com.humanbooster.model;
 
+import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+
+import java.util.List;
+
 /**
  * Classe Utilisateur
  * Décrit un utilisateur avec ses attributs et méthodes
  */
+@Entity
+@Table(name = "utilisateurs")
 public class Utilisateur {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(nullable = false, unique = true)
+    @Email(message = "L'adresse e-mail doit être valide")
     private String email;
+
+    @Column(nullable = false)
     private String motDePasse;
+
+    @Column(nullable = false)
     private String codeValidation;
-    private boolean estValide;
+
+    private boolean valide;
+
+    @Enumerated(EnumType.STRING)
+    private RoleUtilisateur role;
+
+    @OneToMany(mappedBy = "utilisateur", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Reservation> reservations;
+
+    /**
+     * Constructeur par défaut de la classe Utilisateur
+     */
+    public Utilisateur() {}
 
     /**
      * Constructeur de la classe Utilisateur
      *
-     * @param id            Identifiant unique de l'utilisateur
-     * @param email         Adresse e-mail de l'utilisateur
-     * @param motDePasse    Mot de passe de l'utilisateur
+     * @param email          Adresse e-mail de l'utilisateur
+     * @param motDePasse     Mot de passe de l'utilisateur
      * @param codeValidation Code de validation de l'utilisateur
-     * @param estValide     Indique si l'utilisateur est valide ou non
+     * @param valide      Indique si l'utilisateur est valide
+     * @param role           Rôle de l'utilisateur (ADMIN, USER)
      */
-    public Utilisateur(Long id, String email, String motDePasse, String codeValidation, boolean estValide) {
-        this.id = id;
+    public Utilisateur(String email, String motDePasse, String codeValidation, boolean valide, RoleUtilisateur role) {
         this.email = email;
         this.motDePasse = motDePasse;
         this.codeValidation = codeValidation;
-        this.estValide = estValide;
+        this.valide = valide;
+        this.role = role;
     }
 
     /**
@@ -97,15 +125,15 @@ public class Utilisateur {
      * Vérifie si l'utilisateur est valide
      * @return true si l'utilisateur est valide, false sinon
      */
-    public boolean isEstValide() {
-        return estValide;
+    public boolean isValide() {
+        return valide;
     }
 
     /**
      * Définit si l'utilisateur est valide
      * @param estValide true si l'utilisateur est valide, false sinon
      */
-    public void setEstValide(boolean estValide) {
-        this.estValide = estValide;
+    public void setValide(boolean estValide) {
+        this.valide = estValide;
     }
 }

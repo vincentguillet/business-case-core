@@ -1,26 +1,49 @@
 package src.com.humanbooster.model;
 
+import jakarta.persistence.*;
+
+import java.util.List;
+
 /**
  * Classe BorneRecharge
  * Décrit une borne de recharge avec ses attributs et méthodes
  */
+@Entity
+@Table(name = "bornes_recharge")
 public class BorneRecharge {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Enumerated(EnumType.STRING)
     private EtatBorne etat;
+
     private double tarifHoraire;
+
+    @ManyToOne
+    @JoinColumn(name = "lieu_recharge_id")
+    private LieuRecharge lieuRecharge;
+
+    @OneToMany(mappedBy = "borneRecharge", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Reservation> reservations;
+
+    /**
+     * Constructeur par défaut de la classe BorneRecharge
+     */
+    public BorneRecharge() {}
 
     /**
      * Constructeur de la classe BorneRecharge
      *
-     * @param id         Identifiant unique de la borne de recharge
-     * @param etat       État de la borne de recharge (DISPONIBLE, OCCUPEE, EN_PANNE)
-     * @param tarifHoraire Tarif horaire de la borne de recharge (en centimes)
+     * @param etat        L'état de la borne de recharge
+     * @param tarifHoraire Le tarif horaire de la borne de recharge (en centimes)
+     * @param lieuRecharge        Le lieu de recharge associé à la borne
      */
-    public BorneRecharge(Long id, EtatBorne etat, double tarifHoraire) {
-        this.id = id;
+    public BorneRecharge(EtatBorne etat, double tarifHoraire, LieuRecharge lieuRecharge) {
         this.etat = etat;
         this.tarifHoraire = tarifHoraire;
+        this.lieuRecharge = lieuRecharge;
     }
 
     /**
@@ -69,5 +92,21 @@ public class BorneRecharge {
      */
     public void setTarifHoraire(double tarifHoraire) {
         this.tarifHoraire = tarifHoraire;
+    }
+
+    /**
+     * Récupère le lieu de recharge associé à la borne
+     * @return Le lieu de recharge associé à la borne
+     */
+    public LieuRecharge getLieuRecharge() {
+        return lieuRecharge;
+    }
+
+    /**
+     * Définit le lieu de recharge associé à la borne
+     * @param lieuRecharge Le lieu de recharge associé à la borne
+     */
+    public void setLieuRecharge(LieuRecharge lieuRecharge) {
+        this.lieuRecharge = lieuRecharge;
     }
 }

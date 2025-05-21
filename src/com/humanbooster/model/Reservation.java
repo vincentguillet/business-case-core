@@ -1,5 +1,6 @@
 package src.com.humanbooster.model;
 
+import jakarta.persistence.*;
 import src.com.humanbooster.util.TimeUtil;
 
 import java.time.LocalDateTime;
@@ -8,32 +9,36 @@ import java.time.LocalDateTime;
  * Classe Reservation
  * Décrit une réservation d'une idBorne de recharge par un idUtilisateur avec ses attributs et méthodes
  */
+@Entity
+@Table(name = "reservations")
 public class Reservation {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Long idUtilisateur;
-    private Long idBorne;
+
     private LocalDateTime dateDebut;
     private LocalDateTime dateFin;
+
+    @Enumerated(EnumType.STRING)
     private StatutReservation statut;
 
-    /**
-     * Constructeur de la classe Reservation
-     *
-     * @param id            Identifiant unique de la réservation
-     * @param idUtilisateur Identifiant de l'utilisateur ayant effectué la réservation
-     * @param idBorne       Identifiant de la borne de recharge réservée
-     * @param dateDebut     Date et heure de début de la réservation
-     * @param dateFin       Date et heure de fin de la réservation
-     * @param statut        Statut de la réservation
-     */
-    public Reservation(Long id, Long idUtilisateur, Long idBorne, LocalDateTime dateDebut, LocalDateTime dateFin, StatutReservation statut) {
-        this.id = id;
-        this.idUtilisateur = idUtilisateur;
-        this.idBorne = idBorne;
+    @ManyToOne
+    @JoinColumn(name = "utilisateur_id")
+    private Utilisateur utilisateur;
+
+    @ManyToOne
+    @JoinColumn(name = "borne_recharge_id")
+    private BorneRecharge borneRecharge;
+
+    public Reservation() {}
+
+    public Reservation(LocalDateTime dateDebut, LocalDateTime dateFin, StatutReservation statut, Utilisateur utilisateur, BorneRecharge borneRecharge) {
         this.dateDebut = dateDebut;
         this.dateFin = dateFin;
         this.statut = statut;
+        this.utilisateur = utilisateur;
+        this.borneRecharge = borneRecharge;
     }
 
     /**
@@ -55,39 +60,39 @@ public class Reservation {
     }
 
     /**
-     * Récupère l'idUtilisateur ayant effectué la réservation
+     * Récupère l'utilisateur ayant effectué la réservation
      *
-     * @return L'idUtilisateur ayant effectué la réservation
+     * @return L'utilisateur ayant effectué la réservation
      */
-    public Long getIdUtilisateur() {
-        return idUtilisateur;
+    public Utilisateur getUtilisateur() {
+        return utilisateur;
     }
 
     /**
-     * Définit l'id de l'utilisateur ayant effectué la réservation
+     * Définit l'utilisateur ayant effectué la réservation
      *
-     * @param idUtilisateur L'id de l'utilisateur ayant effectué la réservation
+     * @param utilisateur L'utilisateur ayant effectué la réservation
      */
-    public void setIdUtilisateur(Long idUtilisateur) {
-        this.idUtilisateur = idUtilisateur;
+    public void setUtilisateur(Utilisateur utilisateur) {
+        this.utilisateur = utilisateur;
     }
 
     /**
-     * Récupère l'id de la borne de recharge réservée
+     * Récupère la borne de recharge réservée
      *
-     * @return L'id de la borne de recharge réservée
+     * @return La borne de recharge réservée
      */
-    public Long getIdBorne() {
-        return idBorne;
+    public BorneRecharge getBorneRecharge() {
+        return borneRecharge;
     }
 
     /**
-     * Définit l'id de la borne de recharge réservée
+     * Définit la borne de recharge réservée
      *
-     * @param idBorne L'id de la borne de recharge réservée
+     * @param borneRecharge La borne de recharge réservée
      */
-    public void setIdBorne(Long idBorne) {
-        this.idBorne = idBorne;
+    public void setIdBorne(BorneRecharge borneRecharge) {
+        this.borneRecharge = borneRecharge;
     }
 
     /**
@@ -149,8 +154,8 @@ public class Reservation {
         StringBuilder sb = new StringBuilder();
 
         sb.append("Réservation ID : ").append(id).append("\n");
-        sb.append("Utilisateur ID : ").append(idUtilisateur).append("\n");
-        sb.append("Borne ID : ").append(idBorne).append("\n");
+        sb.append("Utilisateur ID : ").append(utilisateur.getId()).append("\n");
+        sb.append("Borne ID : ").append(borneRecharge.getId()).append("\n");
         sb.append("Date de début : ").append(dateDebut.format(TimeUtil.FORMATTER)).append("\n");
         sb.append("Date de fin : ").append(dateFin.format(TimeUtil.FORMATTER)).append("\n");
         sb.append("Statut : ").append(statut).append("\n");

@@ -1,5 +1,7 @@
 package src.com.humanbooster.model;
 
+import jakarta.persistence.*;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,24 +9,35 @@ import java.util.List;
  * Classe LieuRecharge
  * Décrit un lieu de recharge avec ses attributs et méthodes
  */
+@Entity
+@Table(name = "lieux_recharge")
 public class LieuRecharge {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String nom;
     private String adresse;
+
+    @OneToMany(mappedBy = "lieuRecharge", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<BorneRecharge> bornes;
+
+    /**
+     * Constructeur par défaut de la classe LieuRecharge
+     */
+    public LieuRecharge() {}
 
     /**
      * Constructeur de la classe LieuRecharge
      *
-     * @param id     Identifiant unique du lieu de recharge
-     * @param nom    Nom du lieu de recharge
+     * @param nom     Le nom du lieu de recharge
+     * @param adresse L'adresse du lieu de recharge
      */
-    public LieuRecharge(Long id, String nom, String adresse) {
-        this.id = id;
+    public LieuRecharge(String nom, String adresse, List<BorneRecharge> bornes) {
         this.nom = nom;
         this.adresse = adresse;
-        this.bornes = new ArrayList<>();
+        this.bornes = bornes != null ? bornes : new ArrayList<>();
     }
 
     /**
