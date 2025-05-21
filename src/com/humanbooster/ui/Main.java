@@ -8,7 +8,7 @@ import src.com.humanbooster.controller.LieuController;
 import src.com.humanbooster.controller.ReservationController;
 import src.com.humanbooster.dao.LieuRechargeDao;
 import src.com.humanbooster.dao.ReservationDao;
-import src.com.humanbooster.dao.UserDao;
+import src.com.humanbooster.dao.UtilisateurDao;
 import src.com.humanbooster.service.*;
 
 import java.util.Scanner;
@@ -24,16 +24,16 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
 
         // Dao
-        UserDao userDao = new UserDao(sessionFactory);
+        UtilisateurDao utilisateurDao = new UtilisateurDao(sessionFactory);
         LieuRechargeDao lieuRechargeDao = new LieuRechargeDao(sessionFactory);
         ReservationDao reservationDao = new ReservationDao(sessionFactory);
 
         // Service
-        AuthService authService = new AuthServiceImpl(userDao);
+        AuthService authService = new AuthServiceImpl(utilisateurDao);
         LieuService lieuService = new LieuServiceImpl(lieuRechargeDao);
         BorneService borneService = new BorneServiceImpl(lieuRechargeDao, reservationDao);
         DocumentService documentService = new DocumentServiceImpl(lieuRechargeDao);
-        ReservationService reservationService = new ReservationServiceImpl(reservationDao, lieuRechargeDao, documentService);
+        ReservationService reservationService = new ReservationServiceImpl(reservationDao, lieuRechargeDao, utilisateurDao, documentService);
 
         // Controller
         AuthController authController = new AuthController(authService, scanner);
