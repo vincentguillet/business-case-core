@@ -1,5 +1,6 @@
 package src.com.humanbooster.dao;
 
+import org.hibernate.SessionFactory;
 import src.com.humanbooster.model.Utilisateur;
 import src.com.humanbooster.util.JsonFileManager;
 
@@ -17,7 +18,8 @@ public class UserDao extends GenericDaoImpl<Utilisateur, Long> {
      * Constructeur de la classe UserDao
      * Charge les utilisateurs depuis le fichier JSON.
      */
-    public UserDao() {
+    public UserDao(SessionFactory sessionFactory) {
+        super(sessionFactory, Utilisateur.class);
         this.utilisateurs = JsonFileManager.readUtilisateurs();
     }
 

@@ -1,8 +1,8 @@
 package src.com.humanbooster.dao;
 
+import org.hibernate.SessionFactory;
 import src.com.humanbooster.model.Reservation;
 import src.com.humanbooster.model.StatutReservation;
-import src.com.humanbooster.model.Utilisateur;
 import src.com.humanbooster.util.TimeUtil;
 
 import java.io.*;
@@ -23,7 +23,8 @@ public class ReservationDao extends GenericDaoImpl<Reservation, Long> {
      * Constructeur de la classe ReservationDao.
      * Initialise la liste des réservations en lisant le fichier JSON.
      */
-    public ReservationDao() {
+    public ReservationDao(SessionFactory sessionFactory) {
+        super(sessionFactory, Reservation.class);
         this.reservations = readReservations();
     }
 
