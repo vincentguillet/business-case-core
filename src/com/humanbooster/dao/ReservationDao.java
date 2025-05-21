@@ -2,6 +2,7 @@ package src.com.humanbooster.dao;
 
 import src.com.humanbooster.model.Reservation;
 import src.com.humanbooster.model.StatutReservation;
+import src.com.humanbooster.model.Utilisateur;
 import src.com.humanbooster.util.TimeUtil;
 
 import java.io.*;
@@ -13,7 +14,7 @@ import java.util.List;
  * Classe ReservationDao
  * Permet de gérer les réservations en les lisant et en les écrivant dans un fichier JSON.
  */
-public class ReservationDao {
+public class ReservationDao extends GenericDaoImpl<Reservation, Long> {
 
     private static final String FILE_PATH = "data/reservations.json";
     private final List<Reservation> reservations;

@@ -9,7 +9,7 @@ import java.util.List;
  * Classe UserDao
  * Décrit la gestion des utilisateurs en mémoire via un fichier JSON.
  */
-public class UserDao {
+public class UserDao extends GenericDaoImpl<Utilisateur, Long> {
 
     private final List<Utilisateur> utilisateurs;
 

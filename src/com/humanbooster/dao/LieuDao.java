@@ -3,6 +3,7 @@ package src.com.humanbooster.dao;
 import src.com.humanbooster.model.BorneRecharge;
 import src.com.humanbooster.model.EtatBorne;
 import src.com.humanbooster.model.LieuRecharge;
+import src.com.humanbooster.model.Utilisateur;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -12,7 +13,7 @@ import java.util.List;
  * Classe LieuDao
  * Permet de lire, écrire, trouver et supprimer des lieux dans un fichier JSON.
  */
-public class LieuDao {
+public class LieuDao extends GenericDaoImpl<LieuRecharge, Long> {
 
     private static final String FILE_PATH = "data/lieux.json";
     private final List<LieuRecharge> lieux;
