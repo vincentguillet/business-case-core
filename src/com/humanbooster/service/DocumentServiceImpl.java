@@ -38,7 +38,7 @@ public class DocumentServiceImpl implements DocumentService {
      */
     @Override
     public void genererRecuReservation(Reservation r) {
-        BorneRecharge borne = trouverBorneParId(r.getIdBorne());
+        BorneRecharge borne = trouverBorneParId(r.getBorneRecharge().getId());
         if (borne == null) {
             System.out.println("Impossible de générer le reçu : borne introuvable.");
             return;
@@ -55,7 +55,7 @@ public class DocumentServiceImpl implements DocumentService {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(recu))) {
             writer.write("=== Reçu de réservation ===\n");
             writer.write("ID Réservation : " + r.getId() + "\n");
-            writer.write("ID Borne       : " + r.getIdBorne() + "\n");
+            writer.write("ID Borne       : " + r.getBorneRecharge() + "\n");
             writer.write("Date début     : " + r.getDateDebut().format(FORMATTER) + "\n");
             writer.write("Date fin       : " + r.getDateFin().format(FORMATTER) + "\n");
             writer.write("Durée (h)      : " + dureeHeures + "\n");
